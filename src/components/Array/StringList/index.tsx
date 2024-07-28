@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, ChangeEvent } from "react";
 import StringListManager from "@/src/lib/array/StringList";
 import StringListCard from "./StringListCard";
 import { IStringListsHook } from "@/src/lib/hooks/useStringList";
@@ -19,6 +19,9 @@ export default function StringList({
     const inputRef = useRef<HTMLInputElement>(null);
 	const [inputString, setInputString] = useState("");
 	
+	/**
+     * Call on button click
+     */
     const handleAddString = useCallback(() => {
         if(!inputRef.current) {
             return;
@@ -35,9 +38,21 @@ export default function StringList({
         }
     }, [stringList]);
 	
-	function onInputChange(e: any) {
+	/**
+     * Call on input change
+     */
+	function onInputChange(e: ChangeEvent<HTMLInputElement>) {
 		setInputString(e.target.value);
 	}
+	
+	/**
+	 * Call on key down
+	 */
+    const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            handleAddString();
+        }
+    }, [handleAddString]);
 	
     return (
         <div>
@@ -49,6 +64,7 @@ export default function StringList({
 					className="pt-3"
 					value={inputString}
 					onChange={onInputChange}
+					onKeyDown={handleKeyDown}
 				/>
                 <Button
 					className="mt-3"
