@@ -22,9 +22,12 @@ export default function StringListCard({
 							onClick={(e: any) => {
 								stringList.removeString(index);
 							}}
+							className="flex flex-row"
 						>
-							{string}
-                            <FiX size={20} color="currentColor" />
+							<span style={{ display: "inline" }}>
+								{string}
+							</span>
+							<FiX size={20} color="currentColor" style={{ display: "inline" }}/>
 						</Chip>
 					</li>
 				))}
