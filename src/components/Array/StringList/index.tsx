@@ -24,6 +24,9 @@ export default function StringList({
             return;
         }
         
+		// Recover field focus
+		inputRef.current.focus(); 
+		
         // Insert string
         const newString = inputRef.current.value;
         if(newString) {
@@ -48,7 +51,9 @@ export default function StringList({
 					onChange={onInputChange}
 				/>
                 <Button
-					className="mt-3" onClick={handleAddString} color="secondary"
+					className="mt-3"
+					onClick={handleAddString}
+					color="secondary"
 				>Add</Button>
             </div>
 			
