@@ -13,16 +13,15 @@ export default function StringListCard({
 }) {
     return (
         <Card>
-            <ul>
+            <ul className="flex flex-row">
                 {stringList.strings.map((string, index) => (
-                    <li key={index}>
+                    <li key={index} className="m-1">
 						<Chip
 							key={index}
 							color="primary"
 							onClick={(e: any) => {
 								stringList.removeString(index);
 							}}
-							className="flex flex-row"
 						>
 							<span style={{ display: "inline" }}>
 								{string}
