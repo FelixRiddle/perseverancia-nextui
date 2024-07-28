@@ -13,9 +13,12 @@ export default function StringListCard({
 }) {
     return (
         <Card className="mt-2">
-            <ul className="flex flex-row">
+            <ul
+				className="flex flex-wrap md:flex-nowrap mb-6 md:mb-0 p-2 gap-1"
+				style={{ flexWrap: "wrap", maxWidth: "100%", overflowX: "auto" }}
+			>
                 {stringList.strings.map((string, index) => (
-                    <li key={index} className="m-1">
+                    <li key={index} className="flex flex-row">
 						<Chip
 							key={index}
 							color="primary"
