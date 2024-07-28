@@ -38,7 +38,7 @@ export default function StringList({
 	
     return (
         <div>
-            <div>
+			<div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
                 <Input
 					ref={inputRef}
 					type="text"
@@ -47,7 +47,9 @@ export default function StringList({
 					value={inputString}
 					onChange={onInputChange}
 				/>
-                <Button className="mt-3" onClick={handleAddString} color="secondary">Add</Button>
+                <Button
+					className="mt-3" onClick={handleAddString} color="secondary"
+				>Add</Button>
             </div>
 			
 			{/* Show string lists */}
