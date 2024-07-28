@@ -12,7 +12,7 @@ export default function StringListCard({
     stringList: IStringListsHook
 }) {
     return (
-        <Card>
+        <Card className="mt-2">
             <ul className="flex flex-row">
                 {stringList.strings.map((string, index) => (
                     <li key={index} className="m-1">

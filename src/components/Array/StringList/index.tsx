@@ -49,9 +49,13 @@ export default function StringList({
 				/>
                 <Button className="mt-3" onClick={handleAddString} color="secondary">Add</Button>
             </div>
-			<StringListCard
-				stringList={stringList}
-			/>
+			
+			{/* Show string lists */}
+			{stringList.strings.length > 0 && (
+				<StringListCard
+					stringList={stringList}
+				/>
+			)}
 		</div>
 	);
 }
