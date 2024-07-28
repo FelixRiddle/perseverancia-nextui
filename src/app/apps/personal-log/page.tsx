@@ -16,9 +16,7 @@ export default function PersonalLog() {
 			
 			{/* On the right show form to create logs */}
 			{/* Or the form could be at the top, and below the logs */}
-			<aside>
-				
-			</aside>
+			
 		</div>
 	);
 }
