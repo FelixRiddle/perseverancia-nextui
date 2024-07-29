@@ -25,6 +25,7 @@ export default function StringListCard({
 							onClick={(e: any) => {
 								stringList.removeString(index);
 							}}
+							className="hover:cursor-pointer"
 						>
 							<span style={{ display: "inline" }}>
 								{string}
