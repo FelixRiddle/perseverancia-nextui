@@ -26,11 +26,12 @@ export type Subtype =
 
 // Create subtype groups
 export const SUBTYPE_OPTIONS: { [key in LogType]?: Subtype[] } = {
-	Creation: ["Programming", "Design"],
-	Work: ["Programming", "Design"],
-	Workout: ["Sport", "Walk", "Rope", "Lifting"],
-	Entertainment: ["Music", "Movie", "Book", "Show", "Novel", "Podcast"],
-	Miscellaneous: ["Sleep"],
+	Creation: ["None", "Programming", "Design"],
+	Work: ["None", "Programming", "Design"],
+	
+	Workout: ["None", "Sport", "Walk", "Rope", "Lifting"],
+	Entertainment: ["None", "Music", "Movie", "Book", "Show", "Novel", "Podcast"],
+	Miscellaneous: ["None", "Sleep"],
 };
 
 /**
@@ -71,7 +72,6 @@ export default function LogDetails({
 				<Select
 					label="Select log type"
 					aria-label="Select log type"
-					className="max-w-xs"
 					name="type"
 					onChange={handleSubtypeChange}
 					value={selectedSubtype}

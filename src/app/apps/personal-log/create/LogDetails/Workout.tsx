@@ -36,7 +36,6 @@ export default function Workout({
 					<Select 
 						label="Select sport subtype"
 						aria-label="Select sport subtype" 
-						className="max-w-xs"
 						name="type"
 						onChange={selectSport}
 						defaultSelectedKeys={["Miscellaneous"]}

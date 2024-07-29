@@ -1,11 +1,11 @@
 "use client";
 
-import { getLocalTimeZone, now } from "@internationalized/date";
+import { getLocalTimeZone, now, today } from "@internationalized/date";
 import { Button } from "@nextui-org/button";
 import { Textarea } from "@nextui-org/input";
-import { DatePicker, Select, SelectItem } from "@nextui-org/react";
+import { DatePicker, Select, SelectItem, TimeInput } from "@nextui-org/react";
 import { Switch } from "@nextui-org/switch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import StringList from "@/src/components/Array/StringList";
 import useStringList from "@/src/lib/hooks/useStringList";
@@ -29,6 +29,10 @@ export default function CreateLogForm() {
 	
 	const [logType, setLogType] = useState<LogType>("Miscellaneous");
 	
+	useEffect(() => {
+		
+	}, []);
+	
 	function selectType(e: React.ChangeEvent<{ value: string }>) {
 		const selected = e.target.value;
 		if(typeof selected === "string") {
@@ -43,27 +47,22 @@ export default function CreateLogForm() {
 	
 	return (
 		<form>
-			<div className="flex flex-col">
-				<div>
-					<label htmlFor="start">Start date*</label>
-				</div>
-				<div>
-					<DatePicker
-						name="start"
-						variant="bordered"
-						hideTimeZone
-						showMonthAndYearPickers
-						defaultValue={now(getLocalTimeZone())}
-					/>
-				</div>
+			<div>
+				<label htmlFor="start">Start date*</label>
+				<DatePicker
+					name="start"
+					variant="bordered"
+					hideTimeZone
+					showMonthAndYearPickers
+					defaultValue={now(getLocalTimeZone())}
+				/>
 			</div>
 			
-			<div className="pt-3">
-				<label htmlFor="type" className="pr-3">Type*</label>
+			<div className="pr-3">
+				<label htmlFor="type">Type*</label>
 				<Select 
 					label="Select log type"
-					aria-label="Select log type" 
-					className="max-w-xs"
+					aria-label="Select log type"
 					name="type"
 					onChange={selectType}
 					defaultSelectedKeys={["Miscellaneous"]}
@@ -99,23 +98,56 @@ export default function CreateLogForm() {
 				</div>
 				
 				<div className="pt-3">
-					<label htmlFor="until">Until</label>
-					<DatePicker
-						name="until"
-						variant="bordered"
-						hideTimeZone
-						showMonthAndYearPickers
-					/>
+					<label>Until</label>
+					{/* The only way to make this work is to split date and time */}
+					<div className="flex">
+						<div
+							className="flex-auto mr-3"
+						>
+							<DatePicker
+								className="w-64"
+								variant="bordered"
+								hideTimeZone
+								showMonthAndYearPickers
+								defaultValue={today(getLocalTimeZone())}
+							/>
+						</div>
+						<div
+							className="flex-auto"
+						>
+							<TimeInput
+								className="w-64"
+								variant="bordered"
+								hideTimeZone
+							/>
+						</div>
+					</div>
 				</div>
 				
 				<div className="pt-3">
-					<label htmlFor="updated">Updated</label>
-					<DatePicker
-						name="updated"
-						variant="bordered"
-						hideTimeZone
-						showMonthAndYearPickers
-					/>
+					<label>Updated</label>
+					<div className="flex">
+						<div
+							className="flex-auto mr-3"
+						>
+							<DatePicker
+								className="w-64"
+								variant="bordered"
+								hideTimeZone
+								showMonthAndYearPickers
+								defaultValue={today(getLocalTimeZone())}
+							/>
+						</div>
+						<div
+							className="flex-auto"
+						>
+							<TimeInput
+								className="w-64"
+								variant="bordered"
+								hideTimeZone
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 			
