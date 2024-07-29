@@ -4,8 +4,8 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { LogType } from "../CreateLogForm";
 import Entertainment from "./Entertainment";
 import Miscellaneous from "./Miscellaneous";
-import Programming from "./Creation";
 import Workout from "./Workout";
+import Creation from "./Creation";
 
 // Subtypes is a broad list of concepts
 export type Subtype =
@@ -54,7 +54,9 @@ export default function LogDetails({
 	useEffect(() => {
 		const newSubtypes = SUBTYPE_OPTIONS[logType] || [];
 		setSubtypes(newSubtypes);
-		setSelectedSubtype(newSubtypes[0]);
+		
+		// Set none
+		setSelectedSubtype("None");
 	}, [logType]);
 
 	function handleSubtypeChange(e: React.ChangeEvent<{ value: string }>) {
@@ -88,7 +90,8 @@ export default function LogDetails({
 
 			{selectedSubtype && (
 				<>
-					{selectedSubtype === "Programming" && <Programming />}
+					{selectedSubtype === "Programming" && <Creation subtype={selectedSubtype} />}
+					{selectedSubtype === "Design" && <Creation subtype={selectedSubtype} />}
 					{selectedSubtype === "Sport" && <Workout subtype={selectedSubtype} />}
 					{selectedSubtype === "Walk" && <Workout subtype={selectedSubtype} />}
 					{selectedSubtype === "Rope" && <Workout subtype={selectedSubtype} />}

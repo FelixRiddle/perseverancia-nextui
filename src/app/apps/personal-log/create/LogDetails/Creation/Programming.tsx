@@ -2,14 +2,6 @@ import StringList from "@/src/components/Array/StringList";
 import useStringList from "@/src/lib/hooks/useStringList";
 import { Input } from "@nextui-org/input";
 
-export type Design = "None" | "Logo" | "Brand" | "Website" |
-	"3D Modelling" | "Vector image" | "Image" | "Pixel art";
-
-export const DESIGN_TYPES = [
-	"None", "Logo", "Brand", "Website",
-	"3D Modelling", "Vector image", "Image", "Pixel art"
-];
-
 /**
  * Programming details
  */
