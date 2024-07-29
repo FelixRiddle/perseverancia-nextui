@@ -9,13 +9,13 @@ import { useState } from "react";
 
 import StringList from "@/src/components/Array/StringList";
 import useStringList from "@/src/lib/hooks/useStringList";
-import LogDetails, { DetailsType } from "./LogDetails";
+import LogDetails from "./LogDetails";
 
 // Creation / Work, is only a matter of perspective, I fall towards Creation that's why I chose the name like that.
 export type CreationType = "Creation" | "Work";
 export type LogType = "Miscellaneous" | "Workout" | "Learn" | "Investigation" | CreationType;
 
-export const logTypes = ["Creation", "Work", "Workout", "Miscellaneous", "Learn", "Investigation"];
+export const LOG_TYPES = ["Creation", "Work", "Workout", "Miscellaneous", "Learn", "Investigation"];
 
 /**
  * Create log form
@@ -25,17 +25,16 @@ export default function CreateLogForm() {
 	const links = useStringList();
 	const references = useStringList();
 	
-	const [detailsType, setDetailsType] = useState<DetailsType>("Entertainment");
 	const [logType, setLogType] = useState<LogType>("Miscellaneous");
 	
 	function selectType(e: React.ChangeEvent<{ value: string }>) {
 		const selected = e.target.value;
 		if(typeof selected === "string") {
-			if (logTypes.includes(selected)) {
+			if (LOG_TYPES.includes(selected)) {
 				setLogType(selected as LogType);
 				console.log(`Selected: `, selected);
 			} else {
-				console.error(`Selected type is not a valid log type: ${selected}`);
+				throw Error(`Selected type is not a valid log type: ${selected}`);
 			}
 		}
 	}
@@ -67,7 +66,7 @@ export default function CreateLogForm() {
 					onChange={selectType}
 					defaultSelectedKeys={["Miscellaneous"]}
 				>
-					{logTypes.map((currentLogType) => {
+					{LOG_TYPES.map((currentLogType) => {
 						return (
 							<SelectItem
 								key={currentLogType}
@@ -145,7 +144,7 @@ export default function CreateLogForm() {
 			{/* TODO: Details */}
 			<div className="pt-3">
 				<LogDetails
-					detailsType={detailsType}
+					logType={logType}
 				/>
 			</div>
 			

@@ -13,8 +13,14 @@ export default function Programming() {
 		<div>
 			<div className="pt-3">
 				<label htmlFor="subtype">Subtype</label>
+				{/* I have never used anything else other than programming here */}
 				<Input name="subtype" placeholder="Subtype" disabled value="Programming" />
 			</div>
+			
+            <div className="pt-3">
+                <label htmlFor="appName">App name</label>
+                <Input name="appName" placeholder="appName" />
+            </div>
 			
             <div className="pt-3">
                 <label htmlFor="language">Language</label>
