@@ -2,6 +2,14 @@ import StringList from "@/src/components/Array/StringList";
 import useStringList from "@/src/lib/hooks/useStringList";
 import { Input } from "@nextui-org/input";
 
+export type Design = "None" | "Logo" | "Brand" | "Website" |
+	"3D Modelling" | "Vector image" | "Image" | "Pixel art";
+
+export const DESIGN_TYPES = [
+	"None", "Logo", "Brand", "Website",
+	"3D Modelling", "Vector image", "Image", "Pixel art"
+];
+
 /**
  * Programming details
  */
@@ -11,15 +19,9 @@ export default function Programming() {
 	
 	return (
 		<div>
-			<div className="pt-3">
-				<label htmlFor="subtype">Subtype</label>
-				{/* I have never used anything else other than programming here */}
-				<Input name="subtype" placeholder="Subtype" disabled value="Programming" />
-			</div>
-			
             <div className="pt-3">
                 <label htmlFor="appName">App name</label>
-                <Input name="appName" placeholder="appName" />
+                <Input name="appName" placeholder="App name" />
             </div>
 			
             <div className="pt-3">

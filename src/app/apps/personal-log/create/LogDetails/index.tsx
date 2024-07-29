@@ -1,23 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 
 import { LogType } from "../CreateLogForm";
 import Entertainment from "./Entertainment";
 import Miscellaneous from "./Miscellaneous";
-import Programming from "./Programming";
+import Programming from "./Creation";
 import Workout from "./Workout";
 
-// The data is hard to describe because it's too dynamic.
-export type CreationSubtypes = "Programming";
-export type WorkoutSubtypes = "Sport" | "Walk" | "Rope" | "Lifting";
-export type EntertainmentSubtypes = "Music" | "Movie" | "Book" | "Show" | "Novel" | "Podcast";
-export type MiscellaneousSubtypes = "Sleep";
-export type Subtype = CreationSubtypes | WorkoutSubtypes | undefined;
+// Subtypes is a broad list of concepts
+export type Subtype =
+	| "Design"
+	| "Programming"
+	| "Sport"
+	| "Walk"
+	| "Rope"
+	| "Lifting"
+	| "Music"
+	| "Movie"
+	| "Book"
+	| "Show"
+	| "Novel"
+	| "Podcast"
+	| "Sleep"
+	| "None";
 
-export const ENTERTAINMENT_SUBTYPES = ["Music", "Movie", "Book", "Show", "Novel", "Podcast"];
-export const WORKOUT_SUBTYPES = ["Sport", "Walk", "Rope", "Lifting"];
-export const MISCELLANEOUS_SUBTYPES = ["Sleep"];
-export const SUBTYPE_TYPES = ["Sleep", ...WORKOUT_SUBTYPES];
+// Create subtype groups
+export const SUBTYPE_OPTIONS: { [key in LogType]?: Subtype[] } = {
+	Creation: ["Programming", "Design"],
+	Work: ["Programming", "Design"],
+	Workout: ["Sport", "Walk", "Rope", "Lifting"],
+	Entertainment: ["Music", "Movie", "Book", "Show", "Novel", "Podcast"],
+	Miscellaneous: ["Sleep"],
+};
 
 /**
  * Log details
@@ -25,63 +39,67 @@ export const SUBTYPE_TYPES = ["Sleep", ...WORKOUT_SUBTYPES];
  * TODO: The user can create a custom form
  */
 export default function LogDetails({
-	logType
+	logType,
 }: {
-	logType?: LogType,
+	logType?: LogType;
 }) {
-	if(!logType) {
+	if (!logType) {
 		return null;
 	}
-	
-	const [subtype, setSubtype] = useState<Subtype>(undefined);
-	
-	function selectType(e: React.ChangeEvent<{ value: string }>) {
-		const selected = e.target.value;
-		if(typeof selected === "string") {
-			if (SUBTYPE_TYPES.includes(selected)) {
-				setSubtype(selected as Subtype);
-			} else {
-				throw Error(`Selected subtype is not a valid subtype: ${selected}`);
-			}
-		}
+
+	const [subtypes, setSubtypes] = useState<Subtype[]>([]);
+	const [selectedSubtype, setSelectedSubtype] = useState<Subtype>("None");
+
+	// Change subtype options based on logType
+	useEffect(() => {
+		const newSubtypes = SUBTYPE_OPTIONS[logType] || [];
+		setSubtypes(newSubtypes);
+		setSelectedSubtype(newSubtypes[0]);
+	}, [logType]);
+
+	function handleSubtypeChange(e: React.ChangeEvent<{ value: string }>) {
+		setSelectedSubtype(e.target.value as Subtype);
 	}
-	
+
 	return (
 		<div>
 			<h1>Details</h1>
 			<div className="pt-3">
 				<label htmlFor="type" className="pr-3">Subtype</label>
-				<Select 
+				<Select
 					label="Select log type"
-					aria-label="Select log type" 
+					aria-label="Select log type"
 					className="max-w-xs"
 					name="type"
-					onChange={selectType}
-					defaultSelectedKeys={["Miscellaneous"]}
+					onChange={handleSubtypeChange}
+					value={selectedSubtype}
 				>
-					{SUBTYPE_TYPES.map((currentLogType) => {
+					{subtypes.map((subtype) => {
+						if(!subtype) {
+							return <></>;
+						}
+						
 						return (
-							<SelectItem
-								key={currentLogType}
-							>
-								{currentLogType}
-							</SelectItem>
+							<SelectItem key={subtype}>{subtype}</SelectItem>
 						);
 					})}
 				</Select>
 			</div>
-			
-			{subtype && (
+
+			{selectedSubtype && (
 				<>
-					{subtype === "Programming" && (
-						<Programming />
-					) || WORKOUT_SUBTYPES.includes(subtype)  && (
-						<Workout subtype={subtype} />
-					) || ENTERTAINMENT_SUBTYPES.includes(subtype) && (
-						<Entertainment />
-					) || MISCELLANEOUS_SUBTYPES.includes(subtype) && (
-						<Miscellaneous />
-					)}
+					{selectedSubtype === "Programming" && <Programming />}
+					{selectedSubtype === "Sport" && <Workout subtype={selectedSubtype} />}
+					{selectedSubtype === "Walk" && <Workout subtype={selectedSubtype} />}
+					{selectedSubtype === "Rope" && <Workout subtype={selectedSubtype} />}
+					{selectedSubtype === "Lifting" && <Workout subtype={selectedSubtype} />}
+					{selectedSubtype === "Music" && <Entertainment subtype={selectedSubtype}/>}
+					{selectedSubtype === "Movie" && <Entertainment subtype={selectedSubtype}/>}
+					{selectedSubtype === "Book" && <Entertainment subtype={selectedSubtype}/>}
+					{selectedSubtype === "Show" && <Entertainment subtype={selectedSubtype}/>}
+					{selectedSubtype === "Novel" && <Entertainment subtype={selectedSubtype}/>}
+					{selectedSubtype === "Podcast" && <Entertainment subtype={selectedSubtype}/>}
+					{selectedSubtype === "Sleep" && <Miscellaneous />}
 				</>
 			)}
 		</div>

@@ -2,9 +2,9 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
 import { Subtype } from ".";
 
-export type Sport = "Run" | "Cyclism" | undefined;
+export type Sport = "None" | "Run" | "Cyclism" | "Tennis";
 
-export const SPORT_TYPES = ["Sport", "Cyclism"];
+export const SPORT_TYPES = ["None", "Run", "Cyclism", "Tennis"];
 
 /**
  * Workout details
@@ -14,7 +14,7 @@ export default function Workout({
 }: {
 	subtype: Subtype
 }) {
-	const [sport, setSport] = useState<Sport>(undefined);
+	const [sport, setSport] = useState<Sport>("None");
 	
 	function selectSport(e: React.ChangeEvent<{ value: string }>) {
 		const selected = e.target.value;
