@@ -3,38 +3,31 @@
 import { getLocalTimeZone, now } from "@internationalized/date";
 import { Button } from "@nextui-org/button";
 import { Input, Textarea } from "@nextui-org/input";
-import { Accordion, AccordionItem, DatePicker } from "@nextui-org/react";
+import { DatePicker } from "@nextui-org/react";
 import { Switch } from "@nextui-org/switch";
 import { useState } from "react";
 
 import StringList from "@/src/components/Array/StringList";
 import useStringList from "@/src/lib/hooks/useStringList";
+import LogDetails, { DetailsType } from "./LogDetails";
 
-const labelStyle = `
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-`;
-
-const inputStyle = `
-    width: 100%;
-    margin-bottom: 1rem;
-`;
-
-const switchStyle = `
-    margin-bottom: 1rem;
-`;
+export type LogType = "Miscellaneous" | "Workout" | "Creation" | "Learn" | "Work";
 
 /**
  * Create log form
  */
 export default function CreateLogForm() {
-	const stringList = useStringList();
+	const tags = useStringList();
+	const links = useStringList();
+	const references = useStringList();
+	
+	const [detailsType, setDetailsType] = useState<DetailsType>("Entertainment");
 	
 	return (
 		<form>
 			<div className="flex flex-col">
 				<div>
-					<label htmlFor="start">Start date</label>
+					<label htmlFor="start">Start date*</label>
 				</div>
 				<div>
 					<DatePicker
@@ -48,7 +41,7 @@ export default function CreateLogForm() {
 			</div>
 			
 			<div className="pt-3">
-				<label htmlFor="type">Type</label>
+				<label htmlFor="type">Type*</label>
 				<Input name="type" placeholder="Type" />
 			</div>
 			
@@ -67,7 +60,7 @@ export default function CreateLogForm() {
 			<div>
 				<div className="pt-3">
 					<label htmlFor="timeAccurate" className="pr-3">Time accurate</label>
-					<Switch name="timeAccurate" />
+					<Switch name="timeAccurate" defaultSelected />
 				</div>
 				
 				<div className="pt-3">
@@ -94,10 +87,33 @@ export default function CreateLogForm() {
 			<div className="pt-3">
 				<h1>Tags</h1>
 				<StringList
-					stringList={stringList}
+					stringList={tags}
 				>
 				</StringList>
 			</div>
+			
+			{/* TODO: Details */}
+			<LogDetails
+			    detailsType={detailsType}
+			/>
+			
+			<div className="pt-3">
+				<h1>Links</h1>
+				<StringList
+					stringList={links}
+				>
+				</StringList>
+			</div>
+			
+			<div className="pt-3">
+				<h1>References</h1>
+				<StringList
+					stringList={references}
+				>
+				</StringList>
+			</div>
+			
+			{/* (Optional) TODO: Address */}
 			
 			<div className="pt-3 flex justify-center">
 				<Button color="success">

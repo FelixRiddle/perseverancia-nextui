@@ -1,7 +1,7 @@
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { useState, useRef, useCallback, ChangeEvent } from "react";
-import StringListManager from "@/src/lib/array/StringList";
+
 import StringListCard from "./StringListCard";
 import { IStringListsHook } from "@/src/lib/hooks/useStringList";
 
