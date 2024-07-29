@@ -58,7 +58,7 @@ export default function CreateLogForm() {
 				/>
 			</div>
 			
-			<div className="pr-3">
+			<div className="pt-3">
 				<label htmlFor="type">Type*</label>
 				<Select 
 					label="Select log type"
@@ -91,62 +91,60 @@ export default function CreateLogForm() {
 			
 			{/* Miscellaneous fields */}
 			<h1 className="pt-3">Miscellaneous date fields</h1>
-			<div>
-				<div className="pt-3">
-					<label htmlFor="timeAccurate" className="pr-3">Time accurate</label>
-					<Switch name="timeAccurate" defaultSelected />
-				</div>
-				
-				<div className="pt-3">
-					<label>Until</label>
-					{/* The only way to make this work is to split date and time */}
-					<div className="flex">
-						<div
-							className="flex-auto mr-3"
-						>
-							<DatePicker
-								className="w-64"
-								variant="bordered"
-								hideTimeZone
-								showMonthAndYearPickers
-								defaultValue={today(getLocalTimeZone())}
-							/>
-						</div>
-						<div
-							className="flex-auto"
-						>
-							<TimeInput
-								className="w-64"
-								variant="bordered"
-								hideTimeZone
-							/>
-						</div>
+			<div className="pt-3">
+				<label htmlFor="timeAccurate" className="pr-3">Time accurate</label>
+				<Switch name="timeAccurate" defaultSelected />
+			</div>
+			
+			<div className="pt-3">
+				<label>Until</label>
+				{/* The only way to make this work is to split date and time */}
+				<div className="flex">
+					<div
+						className="flex-auto mr-3"
+					>
+						<DatePicker
+							className="w-64"
+							variant="bordered"
+							hideTimeZone
+							showMonthAndYearPickers
+							defaultValue={today(getLocalTimeZone())}
+						/>
+					</div>
+					<div
+						className="flex-auto"
+					>
+						<TimeInput
+							className="w-64"
+							variant="bordered"
+							hideTimeZone
+						/>
 					</div>
 				</div>
-				
-				<div className="pt-3">
-					<label>Updated</label>
-					<div className="flex">
-						<div
-							className="flex-auto mr-3"
-						>
-							<DatePicker
-								className="w-64"
-								variant="bordered"
-								hideTimeZone
-								showMonthAndYearPickers
-								defaultValue={today(getLocalTimeZone())}
-							/>
-						</div>
-						<div
-							className="flex-auto"
-						>
-							<TimeInput
-								className="w-64"
-								variant="bordered"
-								hideTimeZone
-							/>
-						</div>
+			</div>
+			
+			<div className="pt-3">
+				<label>Updated</label>
+				<div className="flex">
+					<div
+						className="flex-auto mr-3"
+					>
+						<DatePicker
+							className="w-64"
+							variant="bordered"
+							hideTimeZone
+							showMonthAndYearPickers
+							defaultValue={today(getLocalTimeZone())}
+						/>
+					</div>
+					<div
+						className="flex-auto"
+					>
+						<TimeInput
+							className="w-64"
+							variant="bordered"
+							hideTimeZone
+						/>
 					</div>
 				</div>
 			</div>

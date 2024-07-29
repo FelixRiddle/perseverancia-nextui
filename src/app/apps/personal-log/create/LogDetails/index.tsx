@@ -75,6 +75,7 @@ export default function LogDetails({
 					name="type"
 					onChange={handleSubtypeChange}
 					value={selectedSubtype}
+					defaultSelectedKeys={["None"]}
 				>
 					{subtypes.map((subtype) => {
 						if(!subtype) {
