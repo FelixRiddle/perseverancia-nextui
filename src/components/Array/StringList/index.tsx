@@ -66,7 +66,6 @@ export default function StringList({
 					onKeyDown={handleKeyDown}
 				/>
                 <Button
-					className="mt-3"
 					onClick={handleAddString}
 					color="secondary"
 				>Add</Button>

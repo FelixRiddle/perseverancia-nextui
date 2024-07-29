@@ -143,9 +143,11 @@ export default function CreateLogForm() {
 			</div>
 			
 			{/* TODO: Details */}
-			<LogDetails
-			    detailsType={detailsType}
-			/>
+			<div className="pt-3">
+				<LogDetails
+					detailsType={detailsType}
+				/>
+			</div>
 			
 			{/* (Optional) TODO: Address */}
 			
