@@ -1,4 +1,4 @@
-import { Subtype } from "../";
+import { Subtype } from "..";
 import Programming from "./Programming";
 
 export type Design = "None" | "Logo" | "Brand" | "Website" |

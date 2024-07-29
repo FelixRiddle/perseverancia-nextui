@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 
-import { LogType } from "../CreateLogForm";
+import { LogType } from "../../CreateLogForm";
 import Entertainment from "./Entertainment";
 import Miscellaneous from "./Miscellaneous";
 import Workout from "./Workout";

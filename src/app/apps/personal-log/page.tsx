@@ -16,7 +16,6 @@ export default async function PersonalLog() {
 			<div className="flex flex-col justify-center items-center">
 				{/* On the left show the logs */}
 				<div className="w-full">
-					
 				</div>
 				
 				{/* On the right show form to create logs */}

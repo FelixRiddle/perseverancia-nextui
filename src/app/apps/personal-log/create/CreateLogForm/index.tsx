@@ -29,10 +29,9 @@ export default function CreateLogForm() {
 	
 	const [logType, setLogType] = useState<LogType>("Miscellaneous");
 	
-	useEffect(() => {
-		
-	}, []);
-	
+	/**
+	 * Select type
+	 */
 	function selectType(e: React.ChangeEvent<{ value: string }>) {
 		const selected = e.target.value;
 		if(typeof selected === "string") {
@@ -82,6 +81,13 @@ export default function CreateLogForm() {
 			<div className="pt-3">
 				<label htmlFor="description">Description</label>
 				<Textarea name="description" placeholder="Log description" />
+			</div>
+			
+			{/* TODO: Details */}
+			<div className="pt-3">
+				<LogDetails
+					logType={logType}
+				/>
 			</div>
 			
 			<div className="pt-3">
@@ -171,13 +177,6 @@ export default function CreateLogForm() {
 					stringList={references}
 				>
 				</StringList>
-			</div>
-			
-			{/* TODO: Details */}
-			<div className="pt-3">
-				<LogDetails
-					logType={logType}
-				/>
 			</div>
 			
 			{/* (Optional) TODO: Address */}
