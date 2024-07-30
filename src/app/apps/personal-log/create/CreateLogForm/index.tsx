@@ -12,6 +12,7 @@ import useStringList from "@/src/lib/hooks/useStringList";
 import LogDetails from "./LogDetails";
 import { PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
 import useMessages from "@/src/lib/hooks/useMessages";
+import { Details, GeneralDetails, ProgrammingDetails } from "@/src/types/apps/personal-log/Details";
 
 // Creation / Work, is only a matter of perspective, I fall towards Creation that's why I chose the name like that.
 export type CreationType = "Creation" | "Work";
@@ -82,14 +83,30 @@ export default function CreateLogForm() {
         }
 		
 		// Create log
-		let log: PersonalLog = {
+		// I don't know how to declare the type correctly
+		// I need to gather the information piece by piece then put it together based on the generic type?
+		// It's gonna generate a lot of unnecessary code
+		let log: any = {
 			start,
             type: type as LogType,
             description: String(description),
-			tags: tags.strings,
-            links: links.strings,
-            references: references.strings,
 		};
+		
+		// Only add if there's something
+		const tagsList = tags.strings;
+		if(tagsList.length > 0) {
+			log.tags = tagsList;
+		}
+		
+		const linkList = links.strings;
+		if(linkList.length > 0) {
+            log.links = linkList;
+        }
+		
+		const referenceList = references.strings;
+		if(referenceList.length > 0) {
+            log.references = referenceList;
+        }
 		
 		// Get until and updated
 		const untilDate = formData.get("untilDate");
@@ -127,23 +144,27 @@ export default function CreateLogForm() {
 		// Details
 		const subtype = formData.get("subtype");
 		if(subtype && subtype !== "None") {
-			// Fetch data of each subtype type
-			let subtypeData = {};
 			if(subtype === "Programming") {
+				// Fetch data of each subtype type
+				let subtypeData: Details<ProgrammingDetails> = {
+					subtype: subtype as LogType,
+				};
+				
 				const appName = String(formData.get("appName"));
 				const language = String(formData.get("language"));
-				subtypeData = {
-					appName,
-					language
+				if(appName) {
+					subtypeData.appName = appName;
+				}
+				
+				if(language) {
+                    subtypeData.language = language;
+                }
+				
+				log.details = {
+					...subtypeData,
+					...additionalSubtypeData,
 				};
 			}
-			
-			console.log(`additionalSubtypeData data: `, additionalSubtypeData);
-			log.details = {
-                subtype: subtype as LogType,
-				...subtypeData,
-				...additionalSubtypeData,
-            };
 		}
         
         // Save log to database

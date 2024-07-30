@@ -1,11 +1,11 @@
 import { LogType } from "@/src/app/apps/personal-log/create/CreateLogForm";
-import { EmptyDetails, GeneralDetails, ProgrammingDetails } from "./Details";
+import { Details, OptionalDetails } from "./Details";
 
-export interface PersonalLog {
+export interface PersonalLog<T extends OptionalDetails> {
 	start: Date;
 	type: LogType;
 	description: string;
-	details?: (ProgrammingDetails | EmptyDetails) & GeneralDetails;
+	details?: Details<T>;
 	until?: Date;
 	updated?: Date;
 	tags?: string[];
