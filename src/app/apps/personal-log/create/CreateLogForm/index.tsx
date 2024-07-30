@@ -23,6 +23,8 @@ export const LOG_TYPES = [
 
 /**
  * Create log form
+ * 
+ * This form is so complex, I understimated how complex it would be.
  */
 export default function CreateLogForm() {
 	const tags = useStringList();
@@ -33,6 +35,7 @@ export default function CreateLogForm() {
 	
 	const [logType, setLogType] = useState<LogType>("Miscellaneous");
 	const [startDateCalendar, setStartDateCalendar] = useState(now(getLocalTimeZone()));
+	const [additionalSubtypeData, setAdditionalSubtypeData] = useState<any>({});
 	
 	/**
 	 * Select type
@@ -83,6 +86,9 @@ export default function CreateLogForm() {
 			start,
             type: type as LogType,
             description: String(description),
+			tags: tags.strings,
+            links: links.strings,
+            references: references.strings,
 		};
 		
 		// Get until and updated
@@ -117,14 +123,31 @@ export default function CreateLogForm() {
 			
 			log.updated = updated
 		}
+		
+		// Details
+		const subtype = formData.get("subtype");
+		if(subtype && subtype !== "None") {
+			// Fetch data of each subtype type
+			let subtypeData = {};
+			if(subtype === "Programming") {
+				const appName = String(formData.get("appName"));
+				const language = String(formData.get("language"));
+				subtypeData = {
+					appName,
+					language
+				};
+			}
+			
+			console.log(`additionalSubtypeData data: `, additionalSubtypeData);
+			log.details = {
+                subtype: subtype as LogType,
+				...subtypeData,
+				...additionalSubtypeData,
+            };
+		}
         
         // Save log to database
         console.log(`Log created: `, log);
-        
-        // Clear form
-		tags.clear();
-        links.clear();
-        references.clear();
     }
 	
 	return (
@@ -177,6 +200,7 @@ export default function CreateLogForm() {
 			<div className="pt-3">
 				<LogDetails
 					logType={logType}
+					setSubtypeData={setAdditionalSubtypeData}
 				/>
 			</div>
 			

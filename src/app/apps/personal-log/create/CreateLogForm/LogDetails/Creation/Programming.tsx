@@ -6,9 +6,29 @@ import useStringList from "@/src/lib/hooks/useStringList";
 /**
  * Programming details
  */
-export default function Programming() {
-	// TODO: Objectify the form data to use when sending the request
-	const repositories = useStringList();
+export default function Programming({
+	setSubtypeData,
+}: {
+	setSubtypeData: (data: any) => void;
+}) {
+	// Store repositories in a list and send them back when requested
+	const repositories = useStringList({
+		initialStrings: [],
+		onChange: (repositoryList: string[]) => {
+			setSubtypeData((data: any) => {
+				// Only set if there are repositories in the list
+				if (repositoryList.length > 0) {
+					return {
+						...data,
+						// Subscribes to the hook data
+						repositories: repositoryList,
+					};
+                }
+				
+                return data;
+			});
+		}
+	});
 	
 	return (
 		<div>

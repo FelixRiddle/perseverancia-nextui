@@ -41,8 +41,10 @@ export const SUBTYPE_OPTIONS: { [key in LogType]?: Subtype[] } = {
  */
 export default function LogDetails({
 	logType,
+	setSubtypeData,
 }: {
 	logType?: LogType;
+	setSubtypeData: (data: any) => void;
 }) {
 	if (!logType) {
 		return null;
@@ -70,9 +72,9 @@ export default function LogDetails({
 			<div className="pt-3">
 				<label htmlFor="type" className="pr-3">Subtype</label>
 				<Select
-					label="Select log type"
-					aria-label="Select log type"
-					name="type"
+					label="Select subtype"
+					aria-label="Select subtype"
+					name="subtype"
 					onChange={handleSubtypeChange}
 					value={selectedSubtype}
 					defaultSelectedKeys={["None"]}
@@ -93,8 +95,14 @@ export default function LogDetails({
 
 			{selectedSubtype && (
 				<>
-					{selectedSubtype === "Programming" && <Creation subtype={selectedSubtype} />}
-					{selectedSubtype === "Design" && <Creation subtype={selectedSubtype} />}
+					{selectedSubtype === "Programming" && <Creation
+						subtype={selectedSubtype}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{selectedSubtype === "Design" && <Creation
+						subtype={selectedSubtype}
+						setSubtypeData={setSubtypeData}
+					/>}
 					{selectedSubtype === "Sport" && <Workout subtype={selectedSubtype} />}
 					{selectedSubtype === "Walk" && <Workout subtype={selectedSubtype} />}
 					{selectedSubtype === "Rope" && <Workout subtype={selectedSubtype} />}

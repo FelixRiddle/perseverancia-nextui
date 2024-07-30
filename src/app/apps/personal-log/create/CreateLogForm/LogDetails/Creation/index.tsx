@@ -13,13 +13,15 @@ export const DESIGN_TYPES = [
  * Creation details
  */
 export default function Creation({
-	subtype
+	subtype,
+	setSubtypeData,
 }: {
-	subtype: Subtype
+	subtype: Subtype;
+	setSubtypeData: (data: any) => void;
 }) {
 	return (
 		<div>
-            {subtype === "Programming" && <Programming />}
+            {subtype === "Programming" && <Programming setSubtypeData={setSubtypeData} />}
 		</div>
 	);
 }

@@ -1,6 +1,4 @@
-# Details TODO
-
-## Programming
+# Programming
 
 - [ ] Suggest apps
 - [ ] Suggest languages

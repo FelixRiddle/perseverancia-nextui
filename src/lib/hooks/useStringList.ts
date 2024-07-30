@@ -47,25 +47,49 @@ export interface IStringListsHook {
  * ## Parameters
  * The `useStringList` custom hook accepts an optional `initialStrings` parameter, which is an array of strings that will be used to initialize the `StringListManager` instance. If no `initialStrings` parameter is provided, the `useStringList` custom hook will create a new `StringListManager` instance with an empty array of strings.
  */
-export default function useStringList(initialStrings: string[] = []): IStringListsHook {
-    const [strings, setStrings] = useState(initialStrings);
+export default function useStringList(props: {
+	initialStrings: string[];
+	// Optional callback function to be called when the strings array changes.
+	onChange?: (strings: string[]) => void;
+} = {
+	initialStrings: [],
+}): IStringListsHook {
+    const [strings, setStrings] = useState(props.initialStrings);
 	
     const addString = (newString: string) => {
-        setStrings([
+		if(!newString) {
+			return;
+		}
+		
+		const newStrings = [
 			...strings,
             newString
-		]);
+		];
+        setStrings(newStrings);
+		
+		if(props.onChange) {
+			props.onChange(newStrings);
+		}
     };
 	
     const removeString = (index: number) => {
-		setStrings([
+		const newStrings = [
             ...strings.slice(0, index),
             ...strings.slice(index + 1)
-        ]);
+        ];
+		setStrings(newStrings);
+		
+		if(props.onChange) {
+			props.onChange(newStrings);
+		}
     };
 	
 	function clear() {
 		setStrings([]);
+		
+		if(props.onChange) {
+			props.onChange([]);
+		}
 	}
 	
     return {
