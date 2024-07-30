@@ -1,18 +1,19 @@
 "use client";
 
-import { ZonedDateTime, getLocalTimeZone, now, today } from "@internationalized/date";
+import { ZonedDateTime, getLocalTimeZone, now } from "@internationalized/date";
 import { Button } from "@nextui-org/button";
 import { Textarea } from "@nextui-org/input";
-import { DatePicker, Select, SelectItem, TimeInput } from "@nextui-org/react";
-import { Switch } from "@nextui-org/switch";
+import { DatePicker, Select, SelectItem } from "@nextui-org/react";
 import { useRef, useState } from "react";
 
 import StringList from "@/src/components/Array/StringList";
 import useStringList from "@/src/lib/hooks/useStringList";
-import LogDetails from "./LogDetails";
-import { PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
+import LogDetails, { Subtype } from "./LogDetails";
 import useMessages from "@/src/lib/hooks/useMessages";
-import { Details, GeneralDetails, ProgrammingDetails } from "@/src/types/apps/personal-log/Details";
+import { Details, EmptyDetails, OptionalDetails, ProgrammingDetails } from "@/src/types/apps/personal-log/Details";
+import { createLog } from "@/src/lib/requestTypes";
+import MiscellaneousFields from "./MiscellaneousFields";
+import { PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
 
 // Creation / Work, is only a matter of perspective, I fall towards Creation that's why I chose the name like that.
 export type CreationType = "Creation" | "Work";
@@ -50,7 +51,6 @@ export default function CreateLogForm({
 		if(typeof selected === "string") {
 			if (LOG_TYPES.includes(selected)) {
 				setLogType(selected as LogType);
-				console.log(`Selected: `, selected);
 			} else {
 				throw Error(`Selected type is not a valid log type: ${selected}`);
 			}
@@ -65,36 +65,42 @@ export default function CreateLogForm({
 	}
 	
 	/**
-	 * Create log
+	 * Create log from form
 	 */
-	function createLog(e: any) {
-        e.preventDefault();
-		
+	function createLogFromForm() {
 		if(!form.current) {
 			return;
 		}
-        
-        // Get form data
+		
+		// Get form data
         const formData = new FormData(form.current);
 		const start = startDateCalendar.toDate();
-        const type = formData.get("type");
+        const logType = formData.get("type");
         const description = formData.get("description");
         
-        // Check for required fields
-        if(!start || !description || !type) {
-            console.log("Missing required fields");
-            return;
-        }
+		if(!start) {
+			const message = "Start date is required";
+			messages.addMessage("error", message);
+			return;
+		}
 		
-		// Create log
-		// I don't know how to declare the type correctly
-		// I need to gather the information piece by piece then put it together based on the generic type?
-		// It's gonna generate a lot of unnecessary code
-		let log: any = {
-			start,
-            type: type as LogType,
+		if(!description) {
+			const message = "Description is required";
+			messages.addMessage("error", message);
+			return;
+		}
+		
+		if(!logType) {
+			const message = "Type is required";
+			messages.addMessage("error", message);
+			return;
+		}
+		
+		let log: Partial<PersonalLog<OptionalDetails>> = {
+            start,
+            type: logType as LogType,
             description: String(description),
-		};
+        };
 		
 		// Only add if there's something
 		const tagsList = tags.strings;
@@ -122,7 +128,7 @@ export default function CreateLogForm({
 		if(untilTime) {
 			const untilDateTime = `${untilDate} ${untilTime}`;
 			const until = new Date(untilDateTime);
-		
+			
 			// Validate dates
 			if(until && until < start) {
 				const message = "Until date must be after start date";
@@ -146,33 +152,50 @@ export default function CreateLogForm({
 		}
 		
 		// Details
-		const subtype = formData.get("subtype");
-		if(subtype && subtype !== "None") {
-			if(subtype === "Programming") {
-				// Fetch data of each subtype type
-				let subtypeData: Details<ProgrammingDetails> = {
-					subtype: subtype as LogType,
-				};
-				
-				const appName = String(formData.get("appName"));
-				const language = String(formData.get("language"));
-				if(appName) {
-					subtypeData.appName = appName;
-				}
-				
-				if(language) {
-                    subtypeData.language = language;
-                }
-				
-				log.details = {
-					...subtypeData,
-					...additionalSubtypeData,
-				};
+		const subtype = formData.get("subtype") as Subtype;
+		if(subtype) {
+			switch(subtype) {
+				case "Programming":
+					// Fetch data of each subtype type
+					let subtypeData: Details<ProgrammingDetails> = {
+						subtype,
+					};
+					
+					const appName = String(formData.get("appName"));
+					const language = String(formData.get("language"));
+					if(appName) {
+						subtypeData.appName = appName;
+					}
+					
+					if(language) {
+						subtypeData.language = language;
+					}
+					
+					log.details = {
+						...subtypeData,
+						...additionalSubtypeData,
+					};
+					
+					return log as PersonalLog<ProgrammingDetails>;
+				case "None":
+					return log as PersonalLog<EmptyDetails>;
+                default:
+					throw Error("Unknown type");
 			}
 		}
+	}
+	
+	/**
+	 * Create log
+	 */
+	async function handleCreateLog(e: any) {
+        e.preventDefault();
         
-        // Save log to database
-        console.log(`Log created: `, log);
+        const log = createLogFromForm();
+        if(log) {
+			// Save log to database
+			await createLog(log);
+		}
     }
 	
 	return (
@@ -221,7 +244,7 @@ export default function CreateLogForm({
 				/>
 			</div>
 			
-			{/* TODO: Details */}
+			{/* Details */}
 			<div className="pt-3">
 				<LogDetails
 					logType={logType}
@@ -229,90 +252,9 @@ export default function CreateLogForm({
 				/>
 			</div>
 			
-			{/* Complete view */}
-			{!simple && (
-				<>
-					<div className="pt-3">
-						<label htmlFor="mixed" className="pr-3">Mixed</label>
-						<Switch
-							name="mixed"
-							aria-label="Mixed"
-						/>
-					</div>
-					
-					{/* Miscellaneous fields */}
-					<h1 className="pt-3">Miscellaneous date fields</h1>
-					<div className="pt-3">
-						<label htmlFor="timeAccurate" className="pr-3">Time accurate</label>
-						<Switch
-							name="timeAccurate"
-							aria-label="Time accurate"
-							defaultSelected
-						/>
-					</div>
-					
-					<div className="pt-3">
-						<label>Until</label>
-						{/* The only way to make this work is to split date and time */}
-						<div className="flex">
-							<div
-								className="flex-auto mr-3"
-							>
-								<DatePicker
-									name="untilDate"
-									aria-label="Until date"
-									className="w-64"
-									variant="bordered"
-									hideTimeZone
-									showMonthAndYearPickers
-									defaultValue={today(getLocalTimeZone())}
-								/>
-							</div>
-							<div
-								className="flex-auto"
-							>
-								<TimeInput
-									name="untilTime"
-									aria-label="Until time"
-									className="w-64"
-									variant="bordered"
-									hideTimeZone
-								/>
-							</div>
-						</div>
-					</div>
-					
-					<div className="pt-3">
-						<label>Updated</label>
-						<div className="flex">
-							<div
-								className="flex-auto mr-3"
-							>
-								<DatePicker
-									name="updatedDate"
-									aria-label="Updated date"
-									className="w-64"
-									variant="bordered"
-									hideTimeZone
-									showMonthAndYearPickers
-									defaultValue={today(getLocalTimeZone())}
-								/>
-							</div>
-							<div
-								className="flex-auto"
-							>
-								<TimeInput
-									name="updatedTime"
-									aria-label="Until time"
-									className="w-64"
-									variant="bordered"
-									hideTimeZone
-								/>
-							</div>
-						</div>
-					</div>
-				</>
-			)}
+			<MiscellaneousFields
+				simple={simple}
+			/>
 			
 			<div className="pt-3">
 				<h1>Tags</h1>
@@ -344,7 +286,7 @@ export default function CreateLogForm({
 				<Button
 					aria-label="Create log"
 					color="success"
-					onClick={createLog}
+					onClick={handleCreateLog}
 				>
 					Create log
 				</Button>

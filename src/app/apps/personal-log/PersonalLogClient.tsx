@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardBody, Tab, Tabs } from "@nextui-org/react";
+import { Tab, Tabs } from "@nextui-org/react";
 import CreateLogForm from "./create/CreateLogForm";
 
 /**
@@ -20,15 +20,11 @@ export default function PersonalLogClient() {
 						{/* The fast log creation form omits any field that requires a
 							later update like: update, until, untilTimeAccurate */}
 						{/* Also omit miscellaneous fields, like 'mixed' */}
-						<div>
-							<CreateLogForm />
-						</div>
+						<CreateLogForm />
 					</Tab>
 					<Tab key="Complete create log" title="Complete">
 						{/* Complete create log form */}
-						<div>
-							<CreateLogForm simple={false} />
-						</div>
+						<CreateLogForm simple={false} />
 					</Tab>
 				</Tabs>
 			</div>
