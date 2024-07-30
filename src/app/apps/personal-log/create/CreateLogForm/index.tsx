@@ -1,15 +1,17 @@
 "use client";
 
-import { getLocalTimeZone, now, today } from "@internationalized/date";
+import { ZonedDateTime, getLocalTimeZone, now, today } from "@internationalized/date";
 import { Button } from "@nextui-org/button";
 import { Textarea } from "@nextui-org/input";
 import { DatePicker, Select, SelectItem, TimeInput } from "@nextui-org/react";
 import { Switch } from "@nextui-org/switch";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 
 import StringList from "@/src/components/Array/StringList";
 import useStringList from "@/src/lib/hooks/useStringList";
 import LogDetails from "./LogDetails";
+import { PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
+import useMessages from "@/src/lib/hooks/useMessages";
 
 // Creation / Work, is only a matter of perspective, I fall towards Creation that's why I chose the name like that.
 export type CreationType = "Creation" | "Work";
@@ -26,8 +28,11 @@ export default function CreateLogForm() {
 	const tags = useStringList();
 	const links = useStringList();
 	const references = useStringList();
+	const form = useRef(null);
+	const messages = useMessages();
 	
 	const [logType, setLogType] = useState<LogType>("Miscellaneous");
+	const [startDateCalendar, setStartDateCalendar] = useState(now(getLocalTimeZone()));
 	
 	/**
 	 * Select type
@@ -44,16 +49,96 @@ export default function CreateLogForm() {
 		}
 	}
 	
+	/**
+	 * Handle change start date
+	 */
+	function handleChangeStartDate(date: ZonedDateTime) {
+		setStartDateCalendar(date);
+	}
+	
+	/**
+	 * Create log
+	 */
+	function createLog(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+		
+		if(!form.current) {
+			return;
+		}
+        
+        // Get form data
+        const formData = new FormData(form.current);
+		const start = startDateCalendar.toDate();
+        const type = formData.get("type");
+        const description = formData.get("description");
+        
+        // Check for required fields
+        if(!start || !description || !type) {
+            console.log("Missing required fields");
+            return;
+        }
+		
+		// Create log
+		let log: PersonalLog = {
+			start,
+            type: type as LogType,
+            description: String(description),
+		};
+		
+		// Get until and updated
+		const untilDate = formData.get("untilDate");
+		const untilTime = formData.get("untilTime");
+		
+        const updatedDate = formData.get("updatedDate");
+        const updatedTime = formData.get("updatedTime");
+		
+		if(untilTime) {
+			const untilDateTime = `${untilDate} ${untilTime}`;
+			const until = new Date(untilDateTime);
+		
+			// Validate dates
+			if(until && until < start) {
+				const message = "Until date must be after start date";
+				messages.addMessage("error", message);
+			    return;
+			}
+			
+			log.until = until;
+		}
+		
+		if(updatedTime) {
+			const updated = new Date(`${updatedDate} ${updatedTime}`);
+			
+			if(updated && updated < start) {
+			    const message = "Updated date must be after start date";
+				messages.addMessage("error", message);
+			    return;
+			}
+			
+			log.updated = updated
+		}
+        
+        // Save log to database
+        console.log(`Log created: `, log);
+        
+        // Clear form
+		tags.clear();
+        links.clear();
+        references.clear();
+    }
+	
 	return (
-		<form>
+		<form ref={form}>
 			<div>
 				<label htmlFor="start">Start date*</label>
 				<DatePicker
 					name="start"
 					variant="bordered"
+					isRequired
 					hideTimeZone
 					showMonthAndYearPickers
-					defaultValue={now(getLocalTimeZone())}
+					value={startDateCalendar}
+					onChange={handleChangeStartDate}
 				/>
 			</div>
 			
@@ -79,7 +164,7 @@ export default function CreateLogForm() {
 			</div>
 			
 			<div className="pt-3">
-				<label htmlFor="description">Description</label>
+				<label htmlFor="description">Description*</label>
 				<Textarea name="description" placeholder="Log description" />
 			</div>
 			
@@ -110,6 +195,8 @@ export default function CreateLogForm() {
 						className="flex-auto mr-3"
 					>
 						<DatePicker
+							name="untilDate"
+							aria-label="Until date"
 							className="w-64"
 							variant="bordered"
 							hideTimeZone
@@ -121,6 +208,8 @@ export default function CreateLogForm() {
 						className="flex-auto"
 					>
 						<TimeInput
+							name="untilTime"
+							aria-label="Until time"
 							className="w-64"
 							variant="bordered"
 							hideTimeZone
@@ -136,6 +225,8 @@ export default function CreateLogForm() {
 						className="flex-auto mr-3"
 					>
 						<DatePicker
+							name="updatedDate"
+							aria-label="Updated date"
 							className="w-64"
 							variant="bordered"
 							hideTimeZone
@@ -147,6 +238,8 @@ export default function CreateLogForm() {
 						className="flex-auto"
 					>
 						<TimeInput
+							name="updatedTime"
+							aria-label="Until time"
 							className="w-64"
 							variant="bordered"
 							hideTimeZone
@@ -182,7 +275,10 @@ export default function CreateLogForm() {
 			{/* (Optional) TODO: Address */}
 			
 			<div className="pt-3 flex justify-center">
-				<Button color="success">
+				<Button
+					color="success"
+					onClick={createLog}
+				>
 					Create log
 				</Button>
 			</div>

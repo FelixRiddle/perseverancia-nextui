@@ -1,10 +1,10 @@
-import { useState, useRef } from "react";
-import StringListManager from "@/src/lib/array/StringList";
+import { useState } from "react";
 
 export interface IStringListsHook {
 	strings: string[],
 	addString: (newString: string) => void,
-	removeString: (index: number) => void
+	removeString: (index: number) => void,
+	clear: () => void,
 }
 
 /**
@@ -64,9 +64,14 @@ export default function useStringList(initialStrings: string[] = []): IStringLis
         ]);
     };
 	
+	function clear() {
+		setStrings([]);
+	}
+	
     return {
 		strings,
 		addString,
-		removeString
+		removeString,
+		clear
 	};
 };

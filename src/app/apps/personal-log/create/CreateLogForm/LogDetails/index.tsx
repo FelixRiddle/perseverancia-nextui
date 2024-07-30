@@ -83,7 +83,9 @@ export default function LogDetails({
 						}
 						
 						return (
-							<SelectItem key={subtype}>{subtype}</SelectItem>
+							<SelectItem key={subtype}>
+								{subtype}
+							</SelectItem>
 						);
 					})}
 				</Select>
