@@ -59,7 +59,7 @@ export default function CreateLogForm() {
 	/**
 	 * Create log
 	 */
-	function createLog(e: React.FormEvent<HTMLFormElement>) {
+	function createLog(e: any) {
         e.preventDefault();
 		
 		if(!form.current) {
@@ -132,6 +132,7 @@ export default function CreateLogForm() {
 			<div>
 				<label htmlFor="start">Start date*</label>
 				<DatePicker
+					aria-label="Start date"
 					name="start"
 					variant="bordered"
 					isRequired
@@ -165,7 +166,11 @@ export default function CreateLogForm() {
 			
 			<div className="pt-3">
 				<label htmlFor="description">Description*</label>
-				<Textarea name="description" placeholder="Log description" />
+				<Textarea
+					aria-label="Description"
+					name="description"
+					placeholder="Log description"
+				/>
 			</div>
 			
 			{/* TODO: Details */}
@@ -177,14 +182,21 @@ export default function CreateLogForm() {
 			
 			<div className="pt-3">
 				<label htmlFor="mixed" className="pr-3">Mixed</label>
-				<Switch name="mixed" />
+				<Switch
+					name="mixed"
+					aria-label="Mixed"
+				/>
 			</div>
 			
 			{/* Miscellaneous fields */}
 			<h1 className="pt-3">Miscellaneous date fields</h1>
 			<div className="pt-3">
 				<label htmlFor="timeAccurate" className="pr-3">Time accurate</label>
-				<Switch name="timeAccurate" defaultSelected />
+				<Switch
+					name="timeAccurate"
+					aria-label="Time accurate"
+					defaultSelected
+				/>
 			</div>
 			
 			<div className="pt-3">
@@ -276,6 +288,7 @@ export default function CreateLogForm() {
 			
 			<div className="pt-3 flex justify-center">
 				<Button
+					aria-label="Create log"
 					color="success"
 					onClick={createLog}
 				>

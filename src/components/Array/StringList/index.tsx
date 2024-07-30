@@ -58,6 +58,7 @@ export default function StringList({
         <div>
 			<div className="flex w-full flex-wrap md:flex-nowrap md:mb-0 gap-4">
                 <Input
+					aria-label="Add tag"
 					ref={inputRef}
 					type="text"
 					placeholder="Add a tag"
