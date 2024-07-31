@@ -13,6 +13,8 @@ export default async function postRequest(endpoint: string, formData: any) {
 		
 		const data = response.data;
 		
+		console.log(`Response data: `, data);
+		
 		return data;
 	} catch(err: any) {
 		console.error(err);

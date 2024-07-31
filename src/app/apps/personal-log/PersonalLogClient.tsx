@@ -2,19 +2,39 @@
 
 import { Tab, Tabs } from "@nextui-org/react";
 import CreateLogForm from "./create/CreateLogForm";
+import { ItemsWindowInfo } from "@/src/lib/apps/personalLog/PersonalLogWindowManager";
+import { PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
+import { OptionalDetails } from "@/src/types/apps/personal-log/Details";
+import Log from "./Log";
 
 /**
  * Personal log client
  */
-export default function PersonalLogClient() {
+export default function PersonalLogClient({
+	itemsWindow,
+	logs
+}: {
+	itemsWindow: ItemsWindowInfo,
+	logs: PersonalLog<OptionalDetails>[]
+}) {
 	return (
-		<div className="flex flex-col justify-center items-center">
+		<div className="flex flex-row justify-center items-start">
 			{/* On the left show the logs */}
-			<div className="w-full">
+			<div
+				className="w-full flex flex-col"
+				style={{maxWidth: "50%", minWidth: "50%"}}
+			>
+				{logs.map((log) => {
+					return (
+						<div key={log.id}>
+							<Log log={log} />
+						</div>
+                    );
+				})}
 			</div>
 			
 			{/* On the right show form to create logs */}
-			<div>
+			<div style={{maxWidth: "50%", minWidth: "50%"}}>
 				<Tabs aria-label="Create log formularies" variant="bordered">
 					<Tab key="Fast create log" title="Simple">
 						{/* The fast log creation form omits any field that requires a

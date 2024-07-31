@@ -7,9 +7,14 @@
 
 ### V1
 
-- [ ] Create and display logs
+- [x] Create logs
+- [ ] Display logs
 
-### V2: Performance
+### V2: Suggestions
+
+- [ ] Suggestions for optional fields, like app name, repositories, etc.
+
+### V3: Performance
 
 - [ ] Implement performance summary
 
