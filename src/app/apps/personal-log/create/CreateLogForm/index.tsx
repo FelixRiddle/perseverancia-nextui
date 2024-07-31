@@ -1,9 +1,9 @@
 "use client";
 
-import { ZonedDateTime, getLocalTimeZone, now } from "@internationalized/date";
+import { ZonedDateTime, getLocalTimeZone, now, parseAbsoluteToLocal } from "@internationalized/date";
 import { Button } from "@nextui-org/button";
 import { Textarea } from "@nextui-org/input";
-import { DatePicker, Select, SelectItem } from "@nextui-org/react";
+import { DatePicker, Select, SelectItem, Switch } from "@nextui-org/react";
 import { useRef, useState } from "react";
 
 import StringList from "@/src/components/Array/StringList";
@@ -13,7 +13,7 @@ import useMessages from "@/src/lib/hooks/useMessages";
 import { Details, EmptyDetails, OptionalDetails, ProgrammingDetails } from "@/src/types/apps/personal-log/Details";
 import { createLog } from "@/src/lib/requestTypes";
 import MiscellaneousFields from "./MiscellaneousFields";
-import { PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
+import { OptPersonalLog, PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
 
 // Creation / Work, is only a matter of perspective, I fall towards Creation that's why I chose the name like that.
 export type CreationType = "Creation" | "Work";
@@ -26,22 +26,36 @@ export const LOG_TYPES = [
 /**
  * Create log form
  * 
- * This form is so complex, I understimated how complex it would be.
+ * The log is given for editing a log.
  */
 export default function CreateLogForm({
 	simple=true,
+	log,
 }: {
 	simple?: boolean;
+	log?: OptPersonalLog<OptionalDetails>;
 }) {
-	const tags = useStringList();
-	const links = useStringList();
-	const references = useStringList();
+	const tags = useStringList({
+		initialStrings: log?.tags ? log.tags : [],
+	});
+	const links = useStringList({
+		initialStrings: log?.links ? log.links : [],
+	});
+	const references = useStringList({
+		initialStrings: log?.links ? log.links : [],
+	});
 	const form = useRef(null);
 	const messages = useMessages();
 	
-	const [logType, setLogType] = useState<LogType>("Miscellaneous");
-	const [startDateCalendar, setStartDateCalendar] = useState(now(getLocalTimeZone()));
-	const [additionalSubtypeData, setAdditionalSubtypeData] = useState<any>({});
+	const [logType, setLogType] = useState<LogType>(
+		log?.type ? log.type : "Miscellaneous"
+	);
+	const [startDateCalendar, setStartDateCalendar] = useState(
+		log?.start ? parseAbsoluteToLocal(log.start.toString()) : now(getLocalTimeZone())
+	);
+	const [additionalSubtypeData, setAdditionalSubtypeData] = useState<any>(
+		log?.details ? log.details : {}
+	);
 	
 	/**
 	 * Select type
@@ -214,6 +228,15 @@ export default function CreateLogForm({
 				/>
 			</div>
 			
+			<div className="pt-3" hidden={simple}>
+				<label htmlFor="timeAccurate" className="pr-3">Time accurate</label>
+				<Switch
+					name="timeAccurate"
+					aria-label="Time accurate"
+					defaultSelected={log?.timeAccurate ? true : false}
+				/>
+			</div>
+			
 			<div className="pt-3">
 				<label htmlFor="type">Type*</label>
 				<Select 
@@ -221,7 +244,7 @@ export default function CreateLogForm({
 					aria-label="Select log type"
 					name="type"
 					onChange={selectType}
-					defaultSelectedKeys={["Miscellaneous"]}
+					defaultSelectedKeys={[logType]}
 				>
 					{LOG_TYPES.map((currentLogType) => {
 						return (
@@ -241,6 +264,7 @@ export default function CreateLogForm({
 					aria-label="Description"
 					name="description"
 					placeholder="Log description"
+					defaultValue={log?.description ? log.description : ""}
 				/>
 			</div>
 			
@@ -254,6 +278,7 @@ export default function CreateLogForm({
 			
 			<MiscellaneousFields
 				simple={simple}
+				log={log}
 			/>
 			
 			<div className="pt-3">
@@ -279,6 +304,8 @@ export default function CreateLogForm({
 				>
 				</StringList>
 			</div>
+			
+			{/* TODO: Notes, cannot use a string list */}
 			
 			{/* (Optional) TODO: Address */}
 			

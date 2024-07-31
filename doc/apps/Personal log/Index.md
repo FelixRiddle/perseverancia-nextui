@@ -4,7 +4,6 @@
 
 ## Versions
 
-
 ### V1
 
 - [x] Create logs
@@ -22,9 +21,16 @@
 
 - [ ] The user can create their own details structure
 
-## Create log
+## Frontend data fetching
 
-- [x] Retrieve programming repositories
+- [x] Retrieve deep nested programming repositories
+
+## Implementation
+
+- [x] Details
+- [x] Tags
+- [x] Links
+- [ ] Notes
 
 ## Performance summary
 

@@ -1,6 +1,8 @@
 "use client";
 
-import { getLocalTimeZone, today } from "@internationalized/date";
+import { OptionalDetails } from "@/src/types/apps/personal-log/Details";
+import { OptPersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
+import { getLocalTimeZone, parseAbsoluteToLocal, parseTime, today } from "@internationalized/date";
 import { DatePicker, TimeInput } from "@nextui-org/react";
 import { Switch } from "@nextui-org/switch";
 
@@ -8,9 +10,11 @@ import { Switch } from "@nextui-org/switch";
  * Miscellaneous fields
  */
 export default function MiscellaneousFields({
-	simple = true
+	simple = true,
+	log,
 }: {
 	simple?: boolean;
+	log?: OptPersonalLog<OptionalDetails>;
 }) {
 	return (
 		<div hidden={simple}>
@@ -20,18 +24,47 @@ export default function MiscellaneousFields({
 				<Switch
 					name="mixed"
 					aria-label="Mixed"
+					defaultSelected={log?.mixed ? true : false}
 				/>
 			</div>
 			
-			{/* Miscellaneous fields */}
-			<h1 className="pt-3">Miscellaneous date fields</h1>
 			<div className="pt-3">
-				<label htmlFor="timeAccurate" className="pr-3">Time accurate</label>
-				<Switch
-					name="timeAccurate"
-					aria-label="Time accurate"
-					defaultSelected
-				/>
+				<label>Updated</label>
+				<div className="flex">
+					<div
+						className="flex-auto mr-3"
+					>
+						<DatePicker
+							name="updatedDate"
+							aria-label="Updated date"
+							className="w-64"
+							variant="bordered"
+							hideTimeZone
+							showMonthAndYearPickers
+							defaultValue={
+								log?.updated
+								? parseAbsoluteToLocal(log.updated.toString())
+								: today(getLocalTimeZone())
+							}
+						/>
+					</div>
+					<div
+						className="flex-auto"
+					>
+						<TimeInput
+							name="updatedTime"
+							aria-label="Updated time"
+							className="w-64"
+							variant="bordered"
+							hideTimeZone
+							defaultValue={
+								log?.updated
+								? parseAbsoluteToLocal(log.updated.toString())
+								: null
+							}
+						/>
+					</div>
+				</div>
 			</div>
 			
 			<div className="pt-3">
@@ -48,7 +81,11 @@ export default function MiscellaneousFields({
 							variant="bordered"
 							hideTimeZone
 							showMonthAndYearPickers
-							defaultValue={today(getLocalTimeZone())}
+							defaultValue={
+								log?.until
+								? parseAbsoluteToLocal(log.until.toString())
+								: today(getLocalTimeZone())
+							}
 						/>
 					</div>
 					<div
@@ -60,39 +97,23 @@ export default function MiscellaneousFields({
 							className="w-64"
 							variant="bordered"
 							hideTimeZone
+							defaultValue={
+								log?.until
+								? parseAbsoluteToLocal(log.until.toString())
+								: null
+							}
 						/>
 					</div>
 				</div>
 			</div>
 			
 			<div className="pt-3">
-				<label>Updated</label>
-				<div className="flex">
-					<div
-						className="flex-auto mr-3"
-					>
-						<DatePicker
-							name="updatedDate"
-							aria-label="Updated date"
-							className="w-64"
-							variant="bordered"
-							hideTimeZone
-							showMonthAndYearPickers
-							defaultValue={today(getLocalTimeZone())}
-						/>
-					</div>
-					<div
-						className="flex-auto"
-					>
-						<TimeInput
-							name="updatedTime"
-							aria-label="Until time"
-							className="w-64"
-							variant="bordered"
-							hideTimeZone
-						/>
-					</div>
-				</div>
+				<label>Until time accurate</label>
+                <Switch
+                    name="untilTimeAccurate"
+                    aria-label="Until time accurate"
+                    defaultSelected={log?.untilTimeAccurate? true : false}
+                />
 			</div>
 		</div>
 	);
