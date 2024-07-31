@@ -2,8 +2,11 @@ import { MoonIcon } from "@/src/components/Icons/MoonIcon";
 import { OptionalDetails } from "@/src/types/apps/personal-log/Details";
 import { PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
 import { parseAbsoluteToLocal } from "@internationalized/date";
-import { DateInput } from "@nextui-org/react";
+import { Button, DateInput } from "@nextui-org/react";
 
+/**
+ * Log component
+ */
 export default function Log({
 	log
 }: {
@@ -25,6 +28,13 @@ export default function Log({
                 {log.details?. subtype === "Sleep" && <MoonIcon className="ml-2" />}
 			</div>
 			<p className="mt-2">{log.description}</p>
+			<Button
+				className="mt-2"
+				aria-label="Edit"
+				color="warning"
+			>
+				Edit
+			</Button>
 		</div>
 	);
 }

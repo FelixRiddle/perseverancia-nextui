@@ -35,7 +35,7 @@ export default function PersonalLogClient({
 							key={log.id}
 							aria-label={log.description}
 							title={log.type}
-							subtitle={log.description}
+							subtitle={subtype ? subtype : ""}
 							indicator={subtype === "Sleep" && <MoonIcon /> }
 							startContent={<TimeInput
 								aria-label="Date"
