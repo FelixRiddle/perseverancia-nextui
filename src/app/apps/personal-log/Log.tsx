@@ -1,5 +1,8 @@
+import { MoonIcon } from "@/src/components/Icons/MoonIcon";
 import { OptionalDetails } from "@/src/types/apps/personal-log/Details";
 import { PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
+import { parseAbsoluteToLocal } from "@internationalized/date";
+import { DateInput } from "@nextui-org/react";
 
 export default function Log({
 	log
@@ -8,8 +11,20 @@ export default function Log({
 }) {
 	
 	return (
-		<div className="p-4 border-b border-gray-200">
-			<p>{log.description}</p>
+		<div>
+			<div>
+				<span className="text-gray-600 text-xs">
+					<DateInput
+						aria-label="Date"
+						variant="bordered"
+						defaultValue={parseAbsoluteToLocal(log.start.toString())}
+						hideTimeZone
+						isDisabled={true}
+					/>
+                </span>
+                {log.details?. subtype === "Sleep" && <MoonIcon className="ml-2" />}
+			</div>
+			<p className="mt-2">{log.description}</p>
 		</div>
 	);
 }

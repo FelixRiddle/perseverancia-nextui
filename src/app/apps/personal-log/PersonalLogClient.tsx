@@ -1,11 +1,13 @@
 'use client';
 
-import { Tab, Tabs } from "@nextui-org/react";
+import { Accordion, AccordionItem, Tab, Tabs, TimeInput } from "@nextui-org/react";
 import CreateLogForm from "./create/CreateLogForm";
 import { ItemsWindowInfo } from "@/src/lib/apps/personalLog/PersonalLogWindowManager";
 import { PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
 import { OptionalDetails } from "@/src/types/apps/personal-log/Details";
 import Log from "./Log";
+import { MoonIcon } from "@/src/components/Icons/MoonIcon";
+import { parseAbsoluteToLocal } from "@internationalized/date";
 
 /**
  * Personal log client
@@ -20,18 +22,34 @@ export default function PersonalLogClient({
 	return (
 		<div className="flex flex-row justify-center items-start">
 			{/* On the left show the logs */}
-			<div
-				className="w-full flex flex-col"
+			<Accordion
+				// className="w-full flex flex-col"
 				style={{maxWidth: "50%", minWidth: "50%"}}
+				variant="bordered"
+				className="mr-3"
 			>
 				{logs.map((log) => {
+					const subtype = log.details?.subtype;
 					return (
-						<div key={log.id}>
+						<AccordionItem
+							key={log.id}
+							aria-label={log.description}
+							title={log.type}
+							subtitle={log.description}
+							indicator={subtype === "Sleep" && <MoonIcon /> }
+							startContent={<TimeInput
+								aria-label="Date"
+								hideTimeZone
+								variant="bordered"
+								defaultValue={parseAbsoluteToLocal(log.start.toString())}
+								isDisabled={true}
+							/>}
+						>
 							<Log log={log} />
-						</div>
+						</AccordionItem>
                     );
 				})}
-			</div>
+			</Accordion>
 			
 			{/* On the right show form to create logs */}
 			<div style={{maxWidth: "50%", minWidth: "50%"}}>
