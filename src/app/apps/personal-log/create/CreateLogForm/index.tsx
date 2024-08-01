@@ -35,6 +35,7 @@ export default function CreateLogForm({
 	simple?: boolean;
 	log?: OptPersonalLog<OptionalDetails>;
 }) {
+	// String lists
 	const tags = useStringList({
 		initialStrings: log?.tags ? log.tags : [],
 	});
@@ -47,6 +48,7 @@ export default function CreateLogForm({
 	const form = useRef(null);
 	const messages = useMessages();
 	
+	// State
 	const [logType, setLogType] = useState<LogType>(
 		log?.type ? log.type : "Miscellaneous"
 	);
