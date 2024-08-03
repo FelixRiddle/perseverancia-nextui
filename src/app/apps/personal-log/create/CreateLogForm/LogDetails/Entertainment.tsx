@@ -1,4 +1,4 @@
-import { Subtype } from ".";
+import { Subtype } from "@/src/types/apps/personal-log/Subtype";
 
 /**
  * Entertainment details

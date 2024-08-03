@@ -1,5 +1,5 @@
-import { LogType } from "@/src/app/apps/personal-log/create/CreateLogForm";
 import { Details, OptionalDetails } from "./Details";
+import { LogType } from "./Logtype";
 
 export interface PersonalLog<T extends OptionalDetails> {
 	id: number;

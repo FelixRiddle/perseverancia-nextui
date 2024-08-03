@@ -1,10 +1,7 @@
+import { Subtype } from "@/src/types/apps/personal-log/Subtype";
+import { SPORT_TYPES, Sport } from "@/src/types/apps/personal-log/Subtype/Sport";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
-import { Subtype } from ".";
-
-export type Sport = "None" | "Run" | "Cyclism" | "Tennis";
-
-export const SPORT_TYPES = ["None", "Run", "Cyclism", "Tennis"];
 
 /**
  * Workout details

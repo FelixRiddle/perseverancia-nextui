@@ -1,5 +1,7 @@
+import { Subtype } from "./Subtype";
+
 export interface GeneralDetails {
-	subtype: string;
+	subtype: Subtype;
 }
 
 export interface EmptyDetails {

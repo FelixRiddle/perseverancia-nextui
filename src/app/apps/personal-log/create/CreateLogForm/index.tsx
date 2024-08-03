@@ -8,20 +8,14 @@ import { useEffect, useRef, useState } from "react";
 
 import StringList from "@/src/components/Array/StringList";
 import useStringList from "@/src/lib/hooks/useStringList";
-import LogDetails, { Subtype } from "./LogDetails";
+import LogDetails from "./LogDetails";
 import useMessages from "@/src/lib/hooks/useMessages";
 import { Details, EmptyDetails, OptionalDetails, ProgrammingDetails } from "@/src/types/apps/personal-log/Details";
 import { createLog } from "@/src/lib/requestTypes";
 import MiscellaneousFields from "./MiscellaneousFields";
 import { OptPersonalLog, PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
-
-// Creation / Work, is only a matter of perspective, I fall towards Creation that's why I chose the name like that.
-export type CreationType = "Creation" | "Work";
-export type LogType = "Miscellaneous" | "Entertainment" | "Workout" | "Learn" | "Investigation" | CreationType;
-
-export const LOG_TYPES = [
-	"Entertainment", "Creation", "Work", "Workout", "Miscellaneous", "Learn", "Investigation"
-];
+import { LOG_TYPES, LogType } from "@/src/types/apps/personal-log/Logtype";
+import { Subtype } from "@/src/types/apps/personal-log/Subtype";
 
 /**
  * Create log form
@@ -49,30 +43,59 @@ export default function CreateLogForm({
 	const messages = useMessages();
 	
 	// State
-	const [logType, setLogType] = useState<Array<LogType>>(
-		[log?.type ? log.type : "Miscellaneous"]
+	const [logType, _setLogType] = useState<LogType>(
+		"Miscellaneous"
 	);
 	const [startDateCalendar, setStartDateCalendar] = useState(
 		log?.start ? parseAbsoluteToLocal(log.start.toString()) : now(getLocalTimeZone())
 	);
-	const [additionalSubtypeData, setAdditionalSubtypeData] = useState<any>(
-		log?.details ? log.details : {}
+	const [additionalSubtypeData, setAdditionalSubtypeData] = useState<Details<OptionalDetails>>(
+		// {} cannot be assigned.
+		log?.details ? log.details : {
+			// None can be used on any details type
+			subtype: "None"
+		}
 	);
 	const [description, setDescription] = useState<string>("");
 	const [timeAccurate, setTimeAccurate] = useState<boolean>(log?.timeAccurate ? true : false);
 	const [untilTimeAccurate, setUntilTimeAccurate] = useState<boolean>(log?.untilTimeAccurate ? true : false);
 	const [mixed, setMixed] = useState<boolean>(log?.mixed ? true : false);
 	
+	/**
+	 * Just in case, to catch bad set states
+	 */
+	function handleSetLogType(logType: LogType) {
+		if(!logType) {
+			console.error("The log type is incorrect default to miscellaneous");
+			_setLogType("Miscellaneous");
+			return;
+		}
+		
+		_setLogType(logType);
+	}
+	
+	useEffect(() => {
+	}, [logType])
+	
+	// Set log type at start
 	useEffect(() => {
 		if(!log) {
-            setAdditionalSubtypeData({});
+			handleSetLogType("Miscellaneous");
+            return;
+        }
+		handleSetLogType(log.type);
+	}, [])
+	
+	// Update when selecting a log type
+	useEffect(() => {
+		if(!log) {
 			return;
         }
 		
 		// That's good continues, that is not stops code execution
 		if(log.type) {
 			// Set fields
-			setLogType([log.type]);
+			handleSetLogType(log.type);
 		}
 		
 		if(log.start) {
@@ -112,9 +135,8 @@ export default function CreateLogForm({
 		
 		// Get form data
         const formData = new FormData(form.current);
+		
 		const start = startDateCalendar.toDate();
-        const logType = formData.get("type");
-        
 		if(!start) {
 			const message = "Start date is required";
 			messages.addMessage("error", message);
@@ -128,18 +150,18 @@ export default function CreateLogForm({
 		}
 		
 		if(!logType) {
-			const message = "Type is required";
+			const message = "Log type is required";
 			messages.addMessage("error", message);
 			return;
 		}
 		
 		let log: Partial<PersonalLog<OptionalDetails>> = {
             start,
-            type: logType as LogType,
+            type: logType,
             description,
-			timeAccurate: timeAccurate,
-            untilTimeAccurate: untilTimeAccurate,
-            mixed: mixed,
+			timeAccurate,
+            untilTimeAccurate,
+            mixed,
         };
 		
 		// Only add if there's something
@@ -238,6 +260,14 @@ export default function CreateLogForm({
 		}
     }
 	
+	/**
+	 * Log type
+	 */
+	function handleLogTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
+		const logType = e.target.value;
+		handleSetLogType(logType);
+	}
+	
 	return (
 		<form ref={form} className="block">
 			<div>
@@ -268,12 +298,12 @@ export default function CreateLogForm({
 				<label htmlFor="type">Type*</label>
 				<Select
 					// The typescript errors cannot be fixed I've wasted too much time already
-					items={LOG_TYPES}
 					label="Select log type"
 					aria-label="Select log type"
 					name="type"
-					selectedKeys={logType}
-					onSelectionChange={setLogType}
+					onChange={handleLogTypeChange}
+					value={logType}
+					selectedKeys={[logType]}
 				>
 					{LOG_TYPES.map((currentLogType) => {
 						return (
@@ -301,7 +331,8 @@ export default function CreateLogForm({
 			{/* Details */}
 			<div className="pt-3">
 				<LogDetails
-					logType={logType[0]}
+					logType={logType}
+					subtypeData={additionalSubtypeData}
 					setSubtypeData={setAdditionalSubtypeData}
 				/>
 			</div>
@@ -339,7 +370,7 @@ export default function CreateLogForm({
 				</StringList>
 			</div>
 			
-			{/* TODO: Notes, cannot use a string list */}
+			{/* TODO: Notes; Cannot use a string list */}
 			
 			{/* (Optional) TODO: Address */}
 			
