@@ -63,10 +63,6 @@ export default function CreateLogForm({
 	const [untilTimeAccurate, setUntilTimeAccurate] = useState<boolean>(log?.untilTimeAccurate ? true : false);
 	const [mixed, setMixed] = useState<boolean>(log?.mixed ? true : false);
 	
-	useEffect(() => {
-		console.log(`New description: `, description);
-	}, [description]);
-	
 	// Starting values
 	useEffect(() => {
 		// Miscellaneous boolean properties
@@ -261,11 +257,10 @@ export default function CreateLogForm({
 	/**
 	 * Handle update log
 	 */
-async function handleUpdateLog(e: React.MouseEvent<HTMLButtonElement>) {
+	async function handleUpdateLog(e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
         
         const log = createLogFromForm();
-		console.log(`Log: `, log);
         if(log) {
             // Save log to database
             await updateLog(log);

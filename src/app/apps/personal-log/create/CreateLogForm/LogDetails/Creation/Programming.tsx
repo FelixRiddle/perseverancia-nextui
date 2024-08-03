@@ -16,7 +16,7 @@ export default function Programming({
 }) {
 	// Store repositories in a list and send them back when requested
 	const repositories = useStringList({
-		initialStrings: [],
+		initialStrings: subtypeData.repositories || [],
 		onChange: (repositoryList: string[]) => {
 			setSubtypeData((data: any) => {
 				// Only set if there are repositories in the list
