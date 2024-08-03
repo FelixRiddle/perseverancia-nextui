@@ -117,7 +117,7 @@ export default function MiscellaneousFields({
 			</div>
 			
 			<div className="pt-3">
-				<label>Until time accurate</label>
+				<label htmlFor="untilTimeAccurate" className="pr-3">Until time accurate</label>
                 <Switch
                     name="untilTimeAccurate"
                     aria-label="Until time accurate"

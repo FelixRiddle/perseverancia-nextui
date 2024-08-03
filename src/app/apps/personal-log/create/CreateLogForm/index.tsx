@@ -29,6 +29,8 @@ export default function CreateLogForm({
 	simple?: boolean;
 	log?: OptPersonalLog<OptionalDetails>;
 }) {
+	const isEditing = log && true;
+	
 	// String lists
 	const tags = useStringList({
 		initialStrings: log?.tags ? log.tags : [],
@@ -370,11 +372,11 @@ export default function CreateLogForm({
 			
 			<div className="pt-3 flex justify-center">
 				<Button
-					aria-label="Create log"
+					aria-label={isEditing ? "Update log" : "Create log"}
 					color="success"
 					onClick={handleCreateLog}
 				>
-					Create log
+					{isEditing ? "Update log" : "Create log"}
 				</Button>
 			</div>
 		</form>
