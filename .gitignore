@@ -1,4 +1,5 @@
 .cache/
+.swc/
 
 ### Node default ignores ###
 # Logs
