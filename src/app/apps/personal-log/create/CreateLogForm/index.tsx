@@ -222,33 +222,13 @@ export default function CreateLogForm({
 		const subtype = formData.get("subtype") as Subtype;
 		if(subtype) {
 			log.details = {
-				subtype
-			};
+				...additionalSubtypeData
+			}
 			
 			switch(subtype) {
 				case "None":
 					return log as PersonalLog<EmptyDetails>;
 				case "Programming":
-					// Fetch data of each subtype type
-					let subtypeData: Details<ProgrammingDetails> = {
-						subtype,
-					};
-					
-					const appName = String(formData.get("appName"));
-					const language = String(formData.get("language"));
-					if(appName) {
-						subtypeData.appName = appName;
-					}
-					
-					if(language) {
-						subtypeData.language = language;
-					}
-					
-					log.details = {
-						...subtypeData,
-						...additionalSubtypeData,
-					};
-					
 					return log as PersonalLog<ProgrammingDetails>;
 				case "Sleep":
 					return log as PersonalLog<EmptyDetails>;
@@ -265,6 +245,7 @@ export default function CreateLogForm({
         e.preventDefault();
         
         const log = createLogFromForm();
+		console.log(`Log: `, log);
         if(log) {
 			// Save log to database
 			await createLog(log);
@@ -275,7 +256,7 @@ export default function CreateLogForm({
 	 * Log type
 	 */
 	function handleLogTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
-		const logType = e.target.value;
+		const logType = e.target.value as LogType;
 		handleSetLogType(logType);
 	}
 	

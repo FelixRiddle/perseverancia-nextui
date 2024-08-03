@@ -20,7 +20,7 @@ export default function LogDetails({
 	setSubtypeData,
 }: {
 	logType?: LogType;
-	subtypeData?: Details<OptionalDetails>;
+	subtypeData: Details<OptionalDetails>;
 	setSubtypeData: (data: any) => void;
 }) {
 	const [possibleSubtypes, setPossibleSubtypes] = useState<Subtype[]>(["None"]);
@@ -112,10 +112,12 @@ export default function LogDetails({
 				<>
 					{subtype === "Programming" && <Creation
 						subtype={subtype}
+						subtypeData={subtypeData}
 						setSubtypeData={setSubtypeData}
 					/>}
 					{subtype === "Design" && <Creation
 						subtype={subtype}
+						subtypeData={subtypeData}
 						setSubtypeData={setSubtypeData}
 					/>}
 					{subtype === "Sport" && <Workout subtype={subtype} />}
