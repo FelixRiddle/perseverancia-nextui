@@ -3,12 +3,12 @@
 import { ZonedDateTime, getLocalTimeZone, now, parseAbsoluteToLocal } from "@internationalized/date";
 import { Button } from "@nextui-org/button";
 import { Textarea } from "@nextui-org/input";
-import { DatePicker, Select, SelectItem, SharedSelection, Switch } from "@nextui-org/react";
-import { ChangeEvent, Key, useEffect, useRef, useState } from "react";
+import { DatePicker, Select, SelectItem, Switch } from "@nextui-org/react";
+import { useEffect, useRef, useState } from "react";
 
 import StringList from "@/src/components/Array/StringList";
 import useStringList from "@/src/lib/hooks/useStringList";
-import LogDetails, { SUBTYPE_OPTIONS, Subtype } from "./LogDetails";
+import LogDetails, { Subtype } from "./LogDetails";
 import useMessages from "@/src/lib/hooks/useMessages";
 import { Details, EmptyDetails, OptionalDetails, ProgrammingDetails } from "@/src/types/apps/personal-log/Details";
 import { createLog } from "@/src/lib/requestTypes";
@@ -59,6 +59,9 @@ export default function CreateLogForm({
 		log?.details ? log.details : {}
 	);
 	const [description, setDescription] = useState<string>("");
+	const [timeAccurate, setTimeAccurate] = useState<boolean>(log?.timeAccurate ? true : false);
+	const [untilTimeAccurate, setUntilTimeAccurate] = useState<boolean>(log?.untilTimeAccurate ? true : false);
+	const [mixed, setMixed] = useState<boolean>(log?.mixed ? true : false);
 	
 	useEffect(() => {
 		if(!log) {
@@ -134,6 +137,9 @@ export default function CreateLogForm({
             start,
             type: logType as LogType,
             description,
+			timeAccurate: timeAccurate,
+            untilTimeAccurate: untilTimeAccurate,
+            mixed: mixed,
         };
 		
 		// Only add if there's something
@@ -253,7 +259,8 @@ export default function CreateLogForm({
 				<Switch
 					name="timeAccurate"
 					aria-label="Time accurate"
-					defaultSelected={log?.timeAccurate ? true : false}
+					isSelected={timeAccurate}
+					onValueChange={setTimeAccurate}
 				/>
 			</div>
 			
@@ -302,6 +309,10 @@ export default function CreateLogForm({
 			<MiscellaneousFields
 				simple={simple}
 				log={log}
+				mixed={mixed}
+				setMixed={setMixed}
+				untilTimeAccurate={untilTimeAccurate}
+				setUntilTimeAccurate={setUntilTimeAccurate}
 			/>
 			
 			<div className="pt-3">

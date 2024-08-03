@@ -12,9 +12,17 @@ import { Switch } from "@nextui-org/switch";
 export default function MiscellaneousFields({
 	simple = true,
 	log,
+	mixed,
+	setMixed,
+	untilTimeAccurate,
+	setUntilTimeAccurate
 }: {
 	simple?: boolean;
 	log?: OptPersonalLog<OptionalDetails>;
+	mixed: boolean;
+	setMixed: (mixed: boolean) => void;
+	untilTimeAccurate: boolean;
+	setUntilTimeAccurate: (accurate: boolean) => void;
 }) {
 	return (
 		<div hidden={simple}>
@@ -24,7 +32,8 @@ export default function MiscellaneousFields({
 				<Switch
 					name="mixed"
 					aria-label="Mixed"
-					defaultSelected={log?.mixed ? true : false}
+					isSelected={mixed}
+					onValueChange={setMixed}
 				/>
 			</div>
 			
@@ -112,7 +121,8 @@ export default function MiscellaneousFields({
                 <Switch
                     name="untilTimeAccurate"
                     aria-label="Until time accurate"
-                    defaultSelected={log?.untilTimeAccurate? true : false}
+					isSelected={untilTimeAccurate}
+					onValueChange={setUntilTimeAccurate}
                 />
 			</div>
 		</div>
