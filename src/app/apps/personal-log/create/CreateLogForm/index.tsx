@@ -101,7 +101,6 @@ export default function CreateLogForm({
 		
 		// Miscellaneous boolean properties
 		if(typeof log.timeAccurate === "boolean") {
-			console.log(`Time accurate: `, log.timeAccurate);
             setTimeAccurate(log.timeAccurate);
 		}
 		
@@ -129,6 +128,19 @@ export default function CreateLogForm({
 		
 		if(log.details) {
             setAdditionalSubtypeData(log.details);
+        }
+		
+		// List of things
+		if(log.tags) {
+            tags.setStrings(log.tags);
+        }
+        
+        if(log.links) {
+            links.setStrings(log.links);
+        }
+        
+        if(log.references) {
+            references.setStrings(log.references);
         }
 	}, [log]);
 	

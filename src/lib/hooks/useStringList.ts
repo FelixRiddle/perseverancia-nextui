@@ -2,9 +2,10 @@ import { useState } from "react";
 
 export interface IStringListsHook {
 	strings: string[],
-	addString: (newString: string) => void,
-	removeString: (index: number) => void,
-	clear: () => void,
+	addString: (newString: string) => void;
+	removeString: (index: number) => void;
+	clear: () => void;
+	setStrings: (strings: string[]) => void;
 }
 
 /**
@@ -94,6 +95,7 @@ export default function useStringList(props: {
 	
     return {
 		strings,
+		setStrings,
 		addString,
 		removeString,
 		clear
