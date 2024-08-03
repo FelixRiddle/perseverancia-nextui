@@ -11,7 +11,7 @@ import useStringList from "@/src/lib/hooks/useStringList";
 import LogDetails from "./LogDetails";
 import useMessages from "@/src/lib/hooks/useMessages";
 import { Details, EmptyDetails, OptionalDetails, ProgrammingDetails } from "@/src/types/apps/personal-log/Details";
-import { createLog } from "@/src/lib/requestTypes";
+import { createLog, updateLog } from "@/src/lib/requestTypes";
 import MiscellaneousFields from "./MiscellaneousFields";
 import { OptPersonalLog, PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
 import { LOG_TYPES, LogType } from "@/src/types/apps/personal-log/Logtype";
@@ -62,6 +62,10 @@ export default function CreateLogForm({
 	const [timeAccurate, setTimeAccurate] = useState<boolean>(log?.timeAccurate ? true : false);
 	const [untilTimeAccurate, setUntilTimeAccurate] = useState<boolean>(log?.untilTimeAccurate ? true : false);
 	const [mixed, setMixed] = useState<boolean>(log?.mixed ? true : false);
+	
+	useEffect(() => {
+		console.log(`New description: `, description);
+	}, [description]);
 	
 	// Starting values
 	useEffect(() => {
@@ -162,7 +166,8 @@ export default function CreateLogForm({
 			return;
 		}
 		
-		let log: Partial<PersonalLog<OptionalDetails>> = {
+		let logData: Partial<PersonalLog<OptionalDetails>> = {
+			id: log?.id ? log.id : 0,
             start,
             type: logType,
             description,
@@ -174,17 +179,17 @@ export default function CreateLogForm({
 		// Only add if there's something
 		const tagsList = tags.strings;
 		if(tagsList.length > 0) {
-			log.tags = tagsList;
+			logData.tags = tagsList;
 		}
 		
 		const linkList = links.strings;
 		if(linkList.length > 0) {
-            log.links = linkList;
+            logData.links = linkList;
         }
 		
 		const referenceList = references.strings;
 		if(referenceList.length > 0) {
-            log.references = referenceList;
+            logData.references = referenceList;
         }
 		
 		// Get until and updated
@@ -205,7 +210,7 @@ export default function CreateLogForm({
 			    return;
 			}
 			
-			log.until = until;
+			logData.until = until;
 		}
 		
 		if(updatedTime) {
@@ -217,23 +222,23 @@ export default function CreateLogForm({
 			    return;
 			}
 			
-			log.updated = updated
+			logData.updated = updated
 		}
 		
 		// Details
 		const subtype = formData.get("subtype") as Subtype;
 		if(subtype) {
-			log.details = {
+			logData.details = {
 				...additionalSubtypeData
-			}
+			};
 			
 			switch(subtype) {
 				case "None":
-					return log as PersonalLog<EmptyDetails>;
+					return logData as PersonalLog<EmptyDetails>;
 				case "Programming":
-					return log as PersonalLog<ProgrammingDetails>;
+					return logData as PersonalLog<ProgrammingDetails>;
 				case "Sleep":
-					return log as PersonalLog<EmptyDetails>;
+					return logData as PersonalLog<EmptyDetails>;
                 default:
 					throw Error("Unknown type");
 			}
@@ -252,6 +257,20 @@ export default function CreateLogForm({
 			await createLog(log);
 		}
     }
+	
+	/**
+	 * Handle update log
+	 */
+async function handleUpdateLog(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+        
+        const log = createLogFromForm();
+		console.log(`Log: `, log);
+        if(log) {
+            // Save log to database
+            await updateLog(log);
+        }
+	}
 	
 	/**
 	 * Log type
@@ -348,6 +367,7 @@ export default function CreateLogForm({
 				</StringList>
 			</div>
 			
+			{/* TODO: Shouldn't use a string list with these two */}
 			<div className="pt-3">
 				<h1>Links</h1>
 				<StringList
@@ -374,7 +394,7 @@ export default function CreateLogForm({
 				<Button
 					aria-label={isEditing ? "Update log" : "Create log"}
 					color="success"
-					onClick={handleCreateLog}
+					onClick={isEditing ? handleUpdateLog : handleCreateLog}
 				>
 					{isEditing ? "Update log" : "Create log"}
 				</Button>
