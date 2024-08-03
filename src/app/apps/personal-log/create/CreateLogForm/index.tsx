@@ -99,6 +99,20 @@ export default function CreateLogForm({
 			return;
         }
 		
+		// Miscellaneous boolean properties
+		if(typeof log.timeAccurate === "boolean") {
+			console.log(`Time accurate: `, log.timeAccurate);
+            setTimeAccurate(log.timeAccurate);
+		}
+		
+		if(typeof log.untilTimeAccurate === "boolean") {
+            setUntilTimeAccurate(log.untilTimeAccurate);
+		}
+		
+		if(typeof log.mixed === "boolean") {
+            setMixed(log.mixed);
+		}
+		
 		// That's good continues, that is not stops code execution
 		if(log.type) {
 			// Set fields
