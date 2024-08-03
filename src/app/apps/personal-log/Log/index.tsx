@@ -3,15 +3,24 @@ import { OptionalDetails } from "@/src/types/apps/personal-log/Details";
 import { PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
 import { parseAbsoluteToLocal } from "@internationalized/date";
 import { Button, DateInput } from "@nextui-org/react";
+import { useEffect } from "react";
 
 /**
  * Log component
  */
 export default function Log({
-	log
+	log,
+	setSelected,
 }: {
 	log: PersonalLog<OptionalDetails>
+	setSelected: (log: PersonalLog<OptionalDetails>) => void;
 }) {
+	/**
+	 * Set selected log
+	 */
+	function setSelectedLog() {
+		setSelected(log);
+	}
 	
 	return (
 		<div>
@@ -32,6 +41,7 @@ export default function Log({
 				className="mt-2"
 				aria-label="Edit"
 				color="warning"
+				onClick={setSelectedLog}
 			>
 				Edit
 			</Button>

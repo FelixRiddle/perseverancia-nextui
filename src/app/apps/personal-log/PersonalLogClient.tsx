@@ -8,6 +8,7 @@ import { OptionalDetails } from "@/src/types/apps/personal-log/Details";
 import Log from "./Log";
 import { MoonIcon } from "@/src/components/Icons/MoonIcon";
 import { parseAbsoluteToLocal } from "@internationalized/date";
+import { useState } from "react";
 
 /**
  * Personal log client
@@ -19,11 +20,12 @@ export default function PersonalLogClient({
 	itemsWindow: ItemsWindowInfo,
 	logs: PersonalLog<OptionalDetails>[]
 }) {
+	const [editLog, setEditLog] = useState<undefined | PersonalLog<OptionalDetails>>(undefined);
+	
 	return (
 		<div className="flex flex-row justify-center items-start">
 			{/* On the left show the logs */}
 			<Accordion
-				// className="w-full flex flex-col"
 				style={{maxWidth: "50%", minWidth: "50%"}}
 				variant="bordered"
 				className="mr-3"
@@ -45,7 +47,10 @@ export default function PersonalLogClient({
 								isDisabled={true}
 							/>}
 						>
-							<Log log={log} />
+							<Log
+								log={log}
+								setSelected={setEditLog}
+							/>
 						</AccordionItem>
                     );
 				})}
@@ -58,11 +63,11 @@ export default function PersonalLogClient({
 						{/* The fast log creation form omits any field that requires a
 							later update like: update, until, untilTimeAccurate */}
 						{/* Also omit miscellaneous fields, like 'mixed' */}
-						<CreateLogForm />
+						<CreateLogForm log={editLog} />
 					</Tab>
 					<Tab key="Complete create log" title="Complete">
 						{/* Complete create log form */}
-						<CreateLogForm simple={false} />
+						<CreateLogForm simple={false} log={editLog} />
 					</Tab>
 				</Tabs>
 			</div>

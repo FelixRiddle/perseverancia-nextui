@@ -3,12 +3,12 @@
 import { ZonedDateTime, getLocalTimeZone, now, parseAbsoluteToLocal } from "@internationalized/date";
 import { Button } from "@nextui-org/button";
 import { Textarea } from "@nextui-org/input";
-import { DatePicker, Select, SelectItem, Switch } from "@nextui-org/react";
-import { useRef, useState } from "react";
+import { DatePicker, Select, SelectItem, SharedSelection, Switch } from "@nextui-org/react";
+import { ChangeEvent, Key, useEffect, useRef, useState } from "react";
 
 import StringList from "@/src/components/Array/StringList";
 import useStringList from "@/src/lib/hooks/useStringList";
-import LogDetails, { Subtype } from "./LogDetails";
+import LogDetails, { SUBTYPE_OPTIONS, Subtype } from "./LogDetails";
 import useMessages from "@/src/lib/hooks/useMessages";
 import { Details, EmptyDetails, OptionalDetails, ProgrammingDetails } from "@/src/types/apps/personal-log/Details";
 import { createLog } from "@/src/lib/requestTypes";
@@ -49,8 +49,8 @@ export default function CreateLogForm({
 	const messages = useMessages();
 	
 	// State
-	const [logType, setLogType] = useState<LogType>(
-		log?.type ? log.type : "Miscellaneous"
+	const [logType, setLogType] = useState<Array<LogType>>(
+		[log?.type ? log.type : "Miscellaneous"]
 	);
 	const [startDateCalendar, setStartDateCalendar] = useState(
 		log?.start ? parseAbsoluteToLocal(log.start.toString()) : now(getLocalTimeZone())
@@ -58,20 +58,39 @@ export default function CreateLogForm({
 	const [additionalSubtypeData, setAdditionalSubtypeData] = useState<any>(
 		log?.details ? log.details : {}
 	);
+	const [description, setDescription] = useState<string>("");
+	
+	useEffect(() => {
+		if(!log) {
+            setAdditionalSubtypeData({});
+			return;
+        }
+		
+		// That's good continues, that is not stops code execution
+		if(log.type) {
+			// Set fields
+			setLogType([log.type]);
+		}
+		
+		if(log.start) {
+			setStartDateCalendar(parseAbsoluteToLocal(log.start.toString()));
+		}
+		
+		if(log.description) {
+			setDescription(log.description);
+		}
+		
+		if(log.details) {
+            setAdditionalSubtypeData(log.details);
+        }
+	}, [log]);
 	
 	/**
-	 * Select type
+	 * Handle change description
 	 */
-	function selectType(e: React.ChangeEvent<{ value: string }>) {
-		const selected = e.target.value;
-		if(typeof selected === "string") {
-			if (LOG_TYPES.includes(selected)) {
-				setLogType(selected as LogType);
-			} else {
-				throw Error(`Selected type is not a valid log type: ${selected}`);
-			}
-		}
-	}
+	function handleChangeDescription(e: React.ChangeEvent<HTMLInputElement>) {
+        setDescription(e.target.value);
+    }
 	
 	/**
 	 * Handle change start date
@@ -92,7 +111,6 @@ export default function CreateLogForm({
         const formData = new FormData(form.current);
 		const start = startDateCalendar.toDate();
         const logType = formData.get("type");
-        const description = formData.get("description");
         
 		if(!start) {
 			const message = "Start date is required";
@@ -115,7 +133,7 @@ export default function CreateLogForm({
 		let log: Partial<PersonalLog<OptionalDetails>> = {
             start,
             type: logType as LogType,
-            description: String(description),
+            description,
         };
 		
 		// Only add if there's something
@@ -171,6 +189,8 @@ export default function CreateLogForm({
 		const subtype = formData.get("subtype") as Subtype;
 		if(subtype) {
 			switch(subtype) {
+				case "None":
+					return log as PersonalLog<EmptyDetails>;
 				case "Programming":
 					// Fetch data of each subtype type
 					let subtypeData: Details<ProgrammingDetails> = {
@@ -193,8 +213,6 @@ export default function CreateLogForm({
 					};
 					
 					return log as PersonalLog<ProgrammingDetails>;
-				case "None":
-					return log as PersonalLog<EmptyDetails>;
                 default:
 					throw Error("Unknown type");
 			}
@@ -241,12 +259,14 @@ export default function CreateLogForm({
 			
 			<div className="pt-3">
 				<label htmlFor="type">Type*</label>
-				<Select 
+				<Select
+					// The typescript errors cannot be fixed I've wasted too much time already
+					items={LOG_TYPES}
 					label="Select log type"
 					aria-label="Select log type"
 					name="type"
-					onChange={selectType}
-					defaultSelectedKeys={[logType]}
+					selectedKeys={logType}
+					onSelectionChange={setLogType}
 				>
 					{LOG_TYPES.map((currentLogType) => {
 						return (
@@ -266,14 +286,15 @@ export default function CreateLogForm({
 					aria-label="Description"
 					name="description"
 					placeholder="Log description"
-					defaultValue={log?.description ? log.description : ""}
+					onChange={handleChangeDescription}
+					value={description}
 				/>
 			</div>
 			
 			{/* Details */}
 			<div className="pt-3">
 				<LogDetails
-					logType={logType}
+					logType={logType[0]}
 					setSubtypeData={setAdditionalSubtypeData}
 				/>
 			</div>
