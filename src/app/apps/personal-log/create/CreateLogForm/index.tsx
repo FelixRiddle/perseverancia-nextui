@@ -245,7 +245,6 @@ export default function CreateLogForm({
         e.preventDefault();
         
         const log = createLogFromForm();
-		console.log(`Log: `, log);
         if(log) {
 			// Save log to database
 			await createLog(log);
@@ -342,6 +341,7 @@ export default function CreateLogForm({
 				<h1>Tags</h1>
 				<StringList
 					stringList={tags}
+					placeholder="Add tags"
 				>
 				</StringList>
 			</div>
@@ -350,6 +350,7 @@ export default function CreateLogForm({
 				<h1>Links</h1>
 				<StringList
 					stringList={links}
+					placeholder="Add links"
 				>
 				</StringList>
 			</div>
@@ -358,6 +359,7 @@ export default function CreateLogForm({
 				<h1>References</h1>
 				<StringList
 					stringList={references}
+					placeholder="Add references"
 				>
 				</StringList>
 			</div>

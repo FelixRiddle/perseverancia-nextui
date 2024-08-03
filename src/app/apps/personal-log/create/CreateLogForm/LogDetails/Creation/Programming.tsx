@@ -110,6 +110,7 @@ export default function Programming({
                 <label htmlFor="repositories">Repositories</label>
 				<StringList
 					stringList={repositories}
+					placeholder="Add repositories"
 				>
 				</StringList>
 				{/* TODO: Suggest repositories by usage frequency */}

@@ -12,9 +12,11 @@ import { IStringListsHook } from "@/src/lib/hooks/useStringList";
  * StringList component to add and remove strings from a list
  */
 export default function StringList({
-    stringList
+    stringList,
+	placeholder = "Bananas"
 }: {
-	stringList: IStringListsHook
+	stringList: IStringListsHook;
+	placeholder: string;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
 	const [inputString, setInputString] = useState("");
@@ -58,10 +60,10 @@ export default function StringList({
         <div>
 			<div className="flex w-full flex-wrap md:flex-nowrap md:mb-0 gap-4">
                 <Input
-					aria-label="Add tag"
+					aria-label={placeholder}
 					ref={inputRef}
 					type="text"
-					placeholder="Add a tag"
+					placeholder={placeholder}
 					value={inputString}
 					onChange={onInputChange}
 					onKeyDown={handleKeyDown}
