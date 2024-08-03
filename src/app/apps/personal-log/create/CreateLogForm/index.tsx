@@ -61,30 +61,35 @@ export default function CreateLogForm({
 	const [untilTimeAccurate, setUntilTimeAccurate] = useState<boolean>(log?.untilTimeAccurate ? true : false);
 	const [mixed, setMixed] = useState<boolean>(log?.mixed ? true : false);
 	
+	// Starting values
+	useEffect(() => {
+		// Miscellaneous boolean properties
+		if(typeof log === "undefined") {
+            setTimeAccurate(true);
+            setUntilTimeAccurate(true);
+            setMixed(false);
+		}
+		
+		// Log type
+		if(!log) {
+			handleSetLogType("Miscellaneous");
+        } else {
+			handleSetLogType(log.type);
+		}
+	}, []);
+	
 	/**
 	 * Just in case, to catch bad set states
 	 */
 	function handleSetLogType(logType: LogType) {
 		if(!logType) {
-			console.error("The log type is incorrect default to miscellaneous");
+			console.error("The log type is incorrect, default to miscellaneous");
 			_setLogType("Miscellaneous");
 			return;
 		}
 		
 		_setLogType(logType);
 	}
-	
-	useEffect(() => {
-	}, [logType])
-	
-	// Set log type at start
-	useEffect(() => {
-		if(!log) {
-			handleSetLogType("Miscellaneous");
-            return;
-        }
-		handleSetLogType(log.type);
-	}, [])
 	
 	// Update when selecting a log type
 	useEffect(() => {
@@ -216,6 +221,10 @@ export default function CreateLogForm({
 		// Details
 		const subtype = formData.get("subtype") as Subtype;
 		if(subtype) {
+			log.details = {
+				subtype
+			};
+			
 			switch(subtype) {
 				case "None":
 					return log as PersonalLog<EmptyDetails>;
@@ -241,6 +250,8 @@ export default function CreateLogForm({
 					};
 					
 					return log as PersonalLog<ProgrammingDetails>;
+				case "Sleep":
+					return log as PersonalLog<EmptyDetails>;
                 default:
 					throw Error("Unknown type");
 			}
