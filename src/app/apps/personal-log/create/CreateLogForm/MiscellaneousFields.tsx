@@ -1,10 +1,16 @@
 "use client";
 
+import { ZonedDateTime } from "@internationalized/date";
+import { DatePicker } from "@nextui-org/react";
+import { Switch } from "@nextui-org/switch";
+
 import { OptionalDetails } from "@/src/types/apps/personal-log/Details";
 import { OptPersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
-import { getLocalTimeZone, parseAbsoluteToLocal, parseTime, today } from "@internationalized/date";
-import { DatePicker, TimeInput } from "@nextui-org/react";
-import { Switch } from "@nextui-org/switch";
+
+export interface MiscellaneousFieldsData {
+	updated?: ZonedDateTime,
+	until?: ZonedDateTime,
+}
 
 /**
  * Miscellaneous fields
@@ -15,7 +21,9 @@ export default function MiscellaneousFields({
 	mixed,
 	setMixed,
 	untilTimeAccurate,
-	setUntilTimeAccurate
+	setUntilTimeAccurate,
+	miscellaneousFields,
+	setMiscellaneousFields,
 }: {
 	simple?: boolean;
 	log?: OptPersonalLog<OptionalDetails>;
@@ -23,6 +31,8 @@ export default function MiscellaneousFields({
 	setMixed: (mixed: boolean) => void;
 	untilTimeAccurate: boolean;
 	setUntilTimeAccurate: (accurate: boolean) => void;
+	miscellaneousFields: MiscellaneousFieldsData,
+	setMiscellaneousFields: (miscellaneousFields: MiscellaneousFieldsData) => void;
 }) {
 	return (
 		<div hidden={simple}>
@@ -37,6 +47,7 @@ export default function MiscellaneousFields({
 				/>
 			</div>
 			
+			
 			<div className="pt-3">
 				<label>Updated</label>
 				<div className="flex">
@@ -46,31 +57,19 @@ export default function MiscellaneousFields({
 						<DatePicker
 							name="updatedDate"
 							aria-label="Updated date"
-							className="w-64"
 							variant="bordered"
 							hideTimeZone
 							showMonthAndYearPickers
-							defaultValue={
-								log?.updated
-								? parseAbsoluteToLocal(log.updated.toString())
-								: today(getLocalTimeZone())
-							}
-						/>
-					</div>
-					<div
-						className="flex-auto"
-					>
-						<TimeInput
-							name="updatedTime"
-							aria-label="Updated time"
-							className="w-64"
-							variant="bordered"
-							hideTimeZone
-							defaultValue={
-								log?.updated
-								? parseAbsoluteToLocal(log.updated.toString())
-								: null
-							}
+							granularity="minute"
+							value={miscellaneousFields.updated}
+							onChange={(date) => {
+								setMiscellaneousFields((prevFields) => {
+									return {
+										...prevFields,
+										updated: date,
+									}
+								});
+							}}
 						/>
 					</div>
 				</div>
@@ -78,7 +77,6 @@ export default function MiscellaneousFields({
 			
 			<div className="pt-3">
 				<label>Until</label>
-				{/* The only way to make this work is to split date and time */}
 				<div className="flex">
 					<div
 						className="flex-auto mr-3"
@@ -86,31 +84,19 @@ export default function MiscellaneousFields({
 						<DatePicker
 							name="untilDate"
 							aria-label="Until date"
-							className="w-64"
 							variant="bordered"
 							hideTimeZone
 							showMonthAndYearPickers
-							defaultValue={
-								log?.until
-								? parseAbsoluteToLocal(log.until.toString())
-								: today(getLocalTimeZone())
-							}
-						/>
-					</div>
-					<div
-						className="flex-auto"
-					>
-						<TimeInput
-							name="untilTime"
-							aria-label="Until time"
-							className="w-64"
-							variant="bordered"
-							hideTimeZone
-							defaultValue={
-								log?.until
-								? parseAbsoluteToLocal(log.until.toString())
-								: null
-							}
+							granularity="minute"
+							value={miscellaneousFields.until}
+							onChange={(date) => {
+								setMiscellaneousFields((prevFields) => {
+									return {
+										...prevFields,
+										until: date,
+									}
+								});
+							}}
 						/>
 					</div>
 				</div>

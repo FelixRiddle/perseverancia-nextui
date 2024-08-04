@@ -12,7 +12,7 @@ import LogDetails from "./LogDetails";
 import useMessages from "@/src/lib/hooks/useMessages";
 import { Details, EmptyDetails, OptionalDetails, ProgrammingDetails } from "@/src/types/apps/personal-log/Details";
 import { createLog, updateLog } from "@/src/lib/requestTypes";
-import MiscellaneousFields from "./MiscellaneousFields";
+import MiscellaneousFields, { MiscellaneousFieldsData } from "./MiscellaneousFields";
 import { OptPersonalLog, PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
 import { LOG_TYPES, LogType } from "@/src/types/apps/personal-log/Logtype";
 import { Subtype } from "@/src/types/apps/personal-log/Subtype";
@@ -62,6 +62,10 @@ export default function CreateLogForm({
 	const [timeAccurate, setTimeAccurate] = useState<boolean>(log?.timeAccurate ? true : false);
 	const [untilTimeAccurate, setUntilTimeAccurate] = useState<boolean>(log?.untilTimeAccurate ? true : false);
 	const [mixed, setMixed] = useState<boolean>(log?.mixed ? true : false);
+	const [miscellaneousFields, setMiscellaneousFields] = useState<MiscellaneousFieldsData>({
+		updated: log?.updated && parseAbsoluteToLocal(log.updated.toString()),
+		until: log?.until && parseAbsoluteToLocal(log.until.toString()),
+	});
 	
 	// Starting values
 	useEffect(() => {
@@ -98,6 +102,8 @@ export default function CreateLogForm({
 		if(!log) {
 			return;
         }
+		
+		console.log(`Log: `, log);
 		
 		// Miscellaneous boolean properties
 		if(typeof log.timeAccurate === "boolean") {
@@ -142,6 +148,20 @@ export default function CreateLogForm({
         if(log.references) {
             references.setStrings(log.references);
         }
+		
+		if(log.updated) {
+			setMiscellaneousFields({
+				...miscellaneousFields,
+                updated: parseAbsoluteToLocal(log.updated.toString()),
+            });
+		}
+		
+		if(log.until) {
+			setMiscellaneousFields({
+				...miscellaneousFields,
+                until: parseAbsoluteToLocal(log.until.toString()),
+            });
+		}
 	}, [log]);
 	
 	/**
@@ -196,6 +216,8 @@ export default function CreateLogForm({
 			timeAccurate,
             untilTimeAccurate,
             mixed,
+			updated: miscellaneousFields.updated ? miscellaneousFields.updated.toDate() : undefined,
+			until: miscellaneousFields.until ? miscellaneousFields.until.toDate() : undefined,
         };
 		
 		// Only add if there's something
@@ -377,6 +399,8 @@ export default function CreateLogForm({
 				setMixed={setMixed}
 				untilTimeAccurate={untilTimeAccurate}
 				setUntilTimeAccurate={setUntilTimeAccurate}
+				miscellaneousFields={miscellaneousFields}
+				setMiscellaneousFields={setMiscellaneousFields}
 			/>
 			
 			<div className="pt-3">

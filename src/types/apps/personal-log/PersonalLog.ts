@@ -16,6 +16,10 @@ export interface PersonalLog<T extends OptionalDetails> {
 	links?: string[];
 	references?: string[];
 	notes?: string[];
+	
+	// MySQL timestamps
+	updatedAt?: Date;
+	createdAt?: Date;
 }
 
 /**
@@ -37,4 +41,8 @@ export interface OptPersonalLog<T extends OptionalDetails> {
 	links?: string[];
 	references?: string[];
 	notes?: string[];
+	
+	// MySQL timestamps
+	updatedAt?: Date;
+	createdAt?: Date;
 }
