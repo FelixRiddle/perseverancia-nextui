@@ -16,8 +16,6 @@ import MiscellaneousFields, { MiscellaneousFieldsData } from "./MiscellaneousFie
 import { OptPersonalLog, PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
 import { LOG_TYPES, LogType } from "@/src/types/apps/personal-log/Logtype";
 import { Subtype } from "@/src/types/apps/personal-log/Subtype";
-import withReactContent from "sweetalert2-react-content";
-import Swal from "sweetalert2";
 import Message from "@/src/types/message/Message";
 import { requestWasSuccessful } from "@/src/lib/status/requestWasSuccessful";
 
@@ -86,7 +84,7 @@ export default function CreateLogForm({
 		if(!log) {
 			handleSetLogType("Miscellaneous");
         } else {
-			handleSetLogType(log.type);
+			handleSetLogType(log.type as LogType);
 		}
 	}, []);
 	
@@ -134,7 +132,6 @@ export default function CreateLogForm({
 			setDescription(log.description);
 		}
 		
-		// FIXME: This is not working for some reason
 		if(log.details) {
             setAdditionalSubtypeData(log.details);
         }
@@ -230,19 +227,19 @@ export default function CreateLogForm({
 		const start = startDateCalendar.toDate();
 		if(!start) {
 			const message = "Start date is required";
-			messages.addMessage("error", message);
+			messages.createMessage("error", message);
 			return;
 		}
 		
 		if(!description) {
 			const message = "Description is required";
-			messages.addMessage("error", message);
+			messages.createMessage("error", message);
 			return;
 		}
 		
 		if(!logType) {
 			const message = "Log type is required";
-			messages.addMessage("error", message);
+			messages.createMessage("error", message);
 			return;
 		}
 		
@@ -288,7 +285,7 @@ export default function CreateLogForm({
 			// Validate dates
 			if(until && until < start) {
 				const message = "Until date must be after start date";
-				messages.addMessage("error", message);
+				messages.createMessage("error", message);
 			    return;
 			}
 			
@@ -300,7 +297,7 @@ export default function CreateLogForm({
 			
 			if(updated && updated < start) {
 			    const message = "Updated date must be after start date";
-				messages.addMessage("error", message);
+				messages.createMessage("error", message);
 			    return;
 			}
 			
@@ -335,7 +332,7 @@ export default function CreateLogForm({
 		const responseMessages = response.messages;
 		if(responseMessages) {
 			responseMessages.forEach((message: Message) => {
-                messages.addMessage(message.type, message.message);
+                messages.createMessage(message.type, message.message);
             });
 		}
 		

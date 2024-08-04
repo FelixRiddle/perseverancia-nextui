@@ -10,7 +10,7 @@ export default function useMessages() {
 	/**
 	 * Add message
 	 */
-	const addMessage = (type: MessageType, message: string) => {
+	const createMessage = (type: MessageType, message: string) => {
 		const newMessage: Message = {
 			id: messages.length + 1,
 			type,
@@ -28,6 +28,20 @@ export default function useMessages() {
 	};
 	
 	/**
+	 * Add a message
+	 */
+	function addMessage(message: Message) {
+		withReactContent(Swal).fire({
+			icon: message.type,
+			title: message.type === "error" ? "Oops..." : "",
+			text: message.message,
+			footer: message.type === "error" ? '<a href="#">Why do I have this issue?</a>' : "",
+		});
+		
+		setMessages((prevMessages) => [...prevMessages, message]);
+	}
+	
+	/**
 	 * Remove message
 	 */
 	const removeMessage = (id: number) => {
@@ -36,6 +50,7 @@ export default function useMessages() {
 	
 	return {
 		addMessage,
+		createMessage,
 		removeMessage,
 	};
 }

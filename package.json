@@ -1,6 +1,6 @@
 {
 	"name": "next-app-template",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"private": true,
 	"scripts": {
 		"dev": "PORT=3011 next dev --turbo",

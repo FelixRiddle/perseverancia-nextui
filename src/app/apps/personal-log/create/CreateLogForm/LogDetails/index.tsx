@@ -42,7 +42,6 @@ export default function LogDetails({
 			return;
 		}
 		
-		// FIXME: Subtype is not being updated on edit log for Miscellaneous fields
 		setSubtype(subtype);
 		setSubtypeData({
 			...subtypeData,

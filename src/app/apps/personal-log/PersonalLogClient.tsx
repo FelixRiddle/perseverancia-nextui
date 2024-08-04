@@ -17,12 +17,35 @@ import { useState } from "react";
  */
 export default function PersonalLogClient({
 	itemsWindow,
-	logs
+	logs: personalLogs
 }: {
 	itemsWindow: ItemsWindowInfo,
 	logs: PersonalLog<OptionalDetails>[]
 }) {
 	const [editLog, setEditLog] = useState<undefined | PersonalLog<OptionalDetails>>(undefined);
+	const [logs, setLogs] = useState(personalLogs);
+	
+	/**
+	 * Remove log
+	 */
+	function handleRemoveLog(log: PersonalLog<OptionalDetails>) {
+        setLogs(logs.filter((item) => item.id!== log.id));
+    }
+    
+    /**
+     * Update log
+     */
+    function handleUpdateLog(log: PersonalLog<OptionalDetails>) {
+        setLogs(logs.map((item) => item.id === log.id? log : item));
+        setEditLog(undefined);
+    }
+    
+    /**
+     * Create log
+     */
+    function handleCreateLog(log: PersonalLog<OptionalDetails>) {
+        setLogs([...logs, log]);
+    }
 	
 	return (
 		<div className="flex flex-row justify-center items-start">
@@ -52,6 +75,7 @@ export default function PersonalLogClient({
 							<Log
 								log={log}
 								setSelected={setEditLog}
+								removeLog={handleRemoveLog}
 							/>
 						</AccordionItem>
                     );

@@ -7,7 +7,7 @@
 ### V1
 
 - [x] Create logs
-- [ ] Display logs
+- [x] Display logs
 
 ### V2: Suggestions
 
