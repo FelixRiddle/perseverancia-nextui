@@ -503,15 +503,24 @@ export default function CreateLogForm({
 			{/* (Optional) TODO: Address */}
 			
 			<div className="pt-3 flex justify-center">
+				{/* Create / Update */}
 				<Button
 					aria-label={isEditing ? "Update log" : "Create log"}
 					color="success"
 					onClick={isEditing ? handleUpdateLog : handleCreateLog}
+					className="mr-3"
 				>
 					{isEditing ? "Update log" : "Create log"}
 				</Button>
 				
-				{/* TODO: Clear button */}
+				{/* Clear */}
+				<Button
+					aria-label={"Clear"}
+					color="danger"
+					onClick={clearLogStates}
+				>
+					Clear
+				</Button>
 			</div>
 		</form>
 	);
