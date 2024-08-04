@@ -42,6 +42,7 @@ export default function LogDetails({
 			return;
 		}
 		
+		// FIXME: Subtype is not being updated on edit log for Miscellaneous fields
 		setSubtype(subtype);
 		setSubtypeData({
 			...subtypeData,
@@ -49,14 +50,10 @@ export default function LogDetails({
 		});
 	}
 	
-	// Set log type at start
-	useEffect(() => {
-		const newSubtype = subtypeData?.subtype ? subtypeData.subtype : "None";
-		updateSubtype(newSubtype);
-	}, [])
-	
-	// Change subtype options based on logType
-	useEffect(() => {
+	/**
+	 * Update subtypes
+	 */
+	function updateSubtypes() {
 		if(!logType) {
 			console.error("Illegal operation: No log type");
 			return;
@@ -73,9 +70,28 @@ export default function LogDetails({
 		
 		// Set
 		const newSubtype = subtypeData?.subtype ? subtypeData.subtype : "None";
-		updateSubtype(newSubtype);
+		if(newSubtype !== subtypeData.subtype) {
+			updateSubtype(newSubtype);
+		}
+	}
+	
+	// Set log type at start
+	useEffect(() => {
+		updateSubtypes();
+	}, []);
+	
+	// Change subtype options based on logType
+	useEffect(() => {
+		updateSubtypes();
 	}, [logType]);
 	
+	useEffect(() => {
+		setSubtype(subtypeData.subtype);
+	}, [subtypeData]);
+	
+	/**
+	 * Handle subtype change
+	 */
 	function handleSubtypeChange(e: React.ChangeEvent<{ value: string }>) {
 		const subtype = e.target.value as Subtype;
 		updateSubtype(subtype);
@@ -120,17 +136,61 @@ export default function LogDetails({
 						subtypeData={subtypeData}
 						setSubtypeData={setSubtypeData}
 					/>}
-					{subtype === "Sport" && <Workout subtype={subtype} />}
-					{subtype === "Walk" && <Workout subtype={subtype} />}
-					{subtype === "Rope" && <Workout subtype={subtype} />}
-					{subtype === "Lifting" && <Workout subtype={subtype} />}
-					{subtype === "Music" && <Entertainment subtype={subtype}/>}
-					{subtype === "Movie" && <Entertainment subtype={subtype}/>}
-					{subtype === "Book" && <Entertainment subtype={subtype}/>}
-					{subtype === "Show" && <Entertainment subtype={subtype}/>}
-					{subtype === "Novel" && <Entertainment subtype={subtype}/>}
-					{subtype === "Podcast" && <Entertainment subtype={subtype}/>}
-					{subtype === "Sleep" && <Miscellaneous />}
+					{subtype === "Sport" && <Workout
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{subtype === "Walk" && <Workout
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{subtype === "Rope" && <Workout
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{subtype === "Lifting" && <Workout
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{subtype === "Music" && <Entertainment
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{subtype === "Movie" && <Entertainment
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{subtype === "Book" && <Entertainment
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{subtype === "Show" && <Entertainment
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{subtype === "Novel" && <Entertainment
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{subtype === "Podcast" && <Entertainment
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
+					{subtype === "Sleep" && <Miscellaneous
+						subtype={subtype}
+						subtypeData={subtypeData}
+						setSubtypeData={setSubtypeData}
+					/>}
 				</>
 			)}
 		</div>

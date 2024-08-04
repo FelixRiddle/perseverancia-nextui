@@ -134,6 +134,7 @@ export default function CreateLogForm({
 			setDescription(log.description);
 		}
 		
+		// FIXME: This is not working for some reason
 		if(log.details) {
             setAdditionalSubtypeData(log.details);
         }

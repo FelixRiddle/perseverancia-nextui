@@ -1,3 +1,4 @@
+import { Details, OptionalDetails } from "@/src/types/apps/personal-log/Details";
 import { Subtype } from "@/src/types/apps/personal-log/Subtype";
 import { SPORT_TYPES, Sport } from "@/src/types/apps/personal-log/Subtype/Sport";
 import { Select, SelectItem } from "@nextui-org/react";
@@ -7,9 +8,13 @@ import { useState } from "react";
  * Workout details
  */
 export default function Workout({
-	subtype
+	subtype,
+	subtypeData,
+	setSubtypeData,
 }: {
-	subtype: Subtype
+	subtype: Subtype;
+	subtypeData: Details<OptionalDetails>
+	setSubtypeData: (data: any) => void;
 }) {
 	const [sport, setSport] = useState<Sport>("None");
 	
