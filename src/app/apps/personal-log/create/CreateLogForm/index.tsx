@@ -25,9 +25,11 @@ import { Subtype } from "@/src/types/apps/personal-log/Subtype";
 export default function CreateLogForm({
 	simple=true,
 	log,
+	setLog,
 }: {
 	simple?: boolean;
 	log?: OptPersonalLog<OptionalDetails>;
+	setLog?: (log: PersonalLog<OptionalDetails> | undefined) => void;
 }) {
 	const isEditing = log && true;
 	
@@ -97,14 +99,10 @@ export default function CreateLogForm({
 		_setLogType(logType);
 	}
 	
-	// Update when selecting a log type
-	useEffect(() => {
-		if(!log) {
-			return;
-        }
-		
-		console.log(`Log: `, log);
-		
+	/**
+	 * Set log information to the states
+	 */
+	function setLogStates(log: OptPersonalLog<OptionalDetails>): void {
 		// Miscellaneous boolean properties
 		if(typeof log.timeAccurate === "boolean") {
             setTimeAccurate(log.timeAccurate);
@@ -162,6 +160,43 @@ export default function CreateLogForm({
                 until: parseAbsoluteToLocal(log.until.toString()),
             });
 		}
+	}
+	
+	/**
+	 * Clear log states
+	 */
+	function clearLogStates() {
+        handleSetLogType("Miscellaneous");
+        setStartDateCalendar(now(getLocalTimeZone()));
+        setDescription("");
+        setAdditionalSubtypeData({
+            subtype: "None"
+        });
+		
+		// Boolean fields
+		setTimeAccurate(true);
+        setUntilTimeAccurate(true);
+        setMixed(false);
+		
+        tags.clear();
+        links.clear();
+        references.clear();
+        setMiscellaneousFields({
+            updated: undefined,
+            until: undefined,
+        });
+    }
+	
+	// Update when selecting a log type
+	useEffect(() => {
+		if(!log) {
+			clearLogStates();
+			return;
+        }
+		
+		console.log(`Log: `, log);
+		
+		setLogStates(log);
 	}, [log]);
 	
 	/**
@@ -290,6 +325,20 @@ export default function CreateLogForm({
 	}
 	
 	/**
+	 * Called on create or update
+	 */
+	function onCreateOrUpdate() {
+		// Reset form
+		if(setLog) {
+			// When log is undefined, the form will reset by the useEffect above
+			setLog(undefined);
+		}
+		
+		// However it doesn't resets if there was no log before
+		clearLogStates();
+	}
+	
+	/**
 	 * Create log
 	 */
 	async function handleCreateLog(e: any) {
@@ -299,6 +348,8 @@ export default function CreateLogForm({
         if(log) {
 			// Save log to database
 			await createLog(log);
+			
+			onCreateOrUpdate();
 		}
     }
 	
@@ -312,6 +363,8 @@ export default function CreateLogForm({
         if(log) {
             // Save log to database
             await updateLog(log);
+			
+			onCreateOrUpdate();
         }
 	}
 	
@@ -443,6 +496,8 @@ export default function CreateLogForm({
 				>
 					{isEditing ? "Update log" : "Create log"}
 				</Button>
+				
+				{/* TODO: Clear button */}
 			</div>
 		</form>
 	);

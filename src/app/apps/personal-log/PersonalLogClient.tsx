@@ -12,6 +12,8 @@ import { useState } from "react";
 
 /**
  * Personal log client
+ * 
+ * TODO: After submit, update the logs
  */
 export default function PersonalLogClient({
 	itemsWindow,
@@ -63,11 +65,18 @@ export default function PersonalLogClient({
 						{/* The fast log creation form omits any field that requires a
 							later update like: update, until, untilTimeAccurate */}
 						{/* Also omit miscellaneous fields, like 'mixed' */}
-						<CreateLogForm log={editLog} />
+						<CreateLogForm
+							log={editLog}
+							setLog={setEditLog}
+						/>
 					</Tab>
 					<Tab key="Complete create log" title="Complete">
 						{/* Complete create log form */}
-						<CreateLogForm simple={false} log={editLog} />
+						<CreateLogForm
+							simple={false}
+							log={editLog}
+							setLog={setEditLog}
+						/>
 					</Tab>
 				</Tabs>
 			</div>
