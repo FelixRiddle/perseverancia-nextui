@@ -16,6 +16,10 @@ import MiscellaneousFields, { MiscellaneousFieldsData } from "./MiscellaneousFie
 import { OptPersonalLog, PersonalLog } from "@/src/types/apps/personal-log/PersonalLog";
 import { LOG_TYPES, LogType } from "@/src/types/apps/personal-log/Logtype";
 import { Subtype } from "@/src/types/apps/personal-log/Subtype";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
+import Message from "@/src/types/message/Message";
+import { requestWasSuccessful } from "@/src/lib/status/requestWasSuccessful";
 
 /**
  * Create log form
@@ -194,8 +198,6 @@ export default function CreateLogForm({
 			return;
         }
 		
-		console.log(`Log: `, log);
-		
 		setLogStates(log);
 	}, [log]);
 	
@@ -327,15 +329,26 @@ export default function CreateLogForm({
 	/**
 	 * Called on create or update
 	 */
-	function onCreateOrUpdate() {
-		// Reset form
-		if(setLog) {
-			// When log is undefined, the form will reset by the useEffect above
-			setLog(undefined);
+	function onCreateOrUpdate(response: any) {
+		// Check if there are messages
+		const responseMessages = response.messages;
+		if(responseMessages) {
+			responseMessages.forEach((message: Message) => {
+                messages.addMessage(message.type, message.message);
+            });
 		}
 		
-		// However it doesn't resets if there was no log before
-		clearLogStates();
+		// Only if successful reset
+		if(requestWasSuccessful(response)) {
+			// Reset form
+			if(setLog) {
+				// When log is undefined, the form will reset by the useEffect above
+				setLog(undefined);
+			}
+			
+			// However it doesn't resets if there was no log before
+			clearLogStates();
+		}
 	}
 	
 	/**
@@ -347,9 +360,9 @@ export default function CreateLogForm({
         const log = createLogFromForm();
         if(log) {
 			// Save log to database
-			await createLog(log);
+			const response = await createLog(log);
 			
-			onCreateOrUpdate();
+			onCreateOrUpdate(response);
 		}
     }
 	
@@ -362,9 +375,9 @@ export default function CreateLogForm({
         const log = createLogFromForm();
         if(log) {
             // Save log to database
-            await updateLog(log);
+            const response = await updateLog(log);
 			
-			onCreateOrUpdate();
+			onCreateOrUpdate(response);
         }
 	}
 	
