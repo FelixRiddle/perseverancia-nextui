@@ -5,7 +5,7 @@ import CreateLogForm from "./CreateLogForm";
 /**
  * Create personal log
  */
-export default function CreatePersonalLogPage() {
+export default async function CreatePersonalLogPage() {
 	
     return (
         <div>

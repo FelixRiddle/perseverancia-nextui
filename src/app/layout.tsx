@@ -2,7 +2,6 @@ import "@/src/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
-import Hydrate from "@react/"
 
 import { Providers } from "./providers";
 

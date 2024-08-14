@@ -32,7 +32,7 @@ export default function MiscellaneousFields({
 	untilTimeAccurate: boolean;
 	setUntilTimeAccurate: (accurate: boolean) => void;
 	miscellaneousFields: MiscellaneousFieldsData,
-	setMiscellaneousFields: (miscellaneousFields: MiscellaneousFieldsData) => void;
+	setMiscellaneousFields: (miscellaneousFields: any) => void;
 }) {
 	return (
 		<div hidden={simple}>
@@ -63,7 +63,7 @@ export default function MiscellaneousFields({
 							granularity="minute"
 							value={miscellaneousFields.updated}
 							onChange={(date) => {
-								setMiscellaneousFields((prevFields) => {
+								setMiscellaneousFields((prevFields: MiscellaneousFieldsData) => {
 									return {
 										...prevFields,
 										updated: date,
@@ -90,7 +90,7 @@ export default function MiscellaneousFields({
 							granularity="minute"
 							value={miscellaneousFields.until}
 							onChange={(date) => {
-								setMiscellaneousFields((prevFields) => {
+								setMiscellaneousFields((prevFields: MiscellaneousFieldsData) => {
 									return {
 										...prevFields,
 										until: date,

@@ -111,8 +111,7 @@ export default function Programming({
 				<StringList
 					stringList={repositories}
 					placeholder="Add repositories"
-				>
-				</StringList>
+				/>
 				{/* TODO: Suggest repositories by usage frequency */}
             </div>
 		</div>

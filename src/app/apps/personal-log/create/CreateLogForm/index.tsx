@@ -379,7 +379,7 @@ export default function CreateLogForm({
 	/**
 	 * Log type
 	 */
-	function handleLogTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
+	function handleLogTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
 		const logType = e.target.value as LogType;
 		handleSetLogType(logType);
 	}
@@ -469,8 +469,7 @@ export default function CreateLogForm({
 				<StringList
 					stringList={tags}
 					placeholder="Add tags"
-				>
-				</StringList>
+				/>
 			</div>
 			
 			{/* TODO: Shouldn't use a string list with these two */}
@@ -479,8 +478,7 @@ export default function CreateLogForm({
 				<StringList
 					stringList={links}
 					placeholder="Add links"
-				>
-				</StringList>
+				/>
 			</div>
 			
 			<div className="pt-3">
@@ -488,8 +486,7 @@ export default function CreateLogForm({
 				<StringList
 					stringList={references}
 					placeholder="Add references"
-				>
-				</StringList>
+				/>
 			</div>
 			
 			{/* TODO: Notes; Cannot use a string list */}
