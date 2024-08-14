@@ -312,14 +312,11 @@ export default function CreateLogForm({
 			};
 			
 			switch(subtype) {
-				case "None":
-					return logData as PersonalLog<EmptyDetails>;
 				case "Programming":
 					return logData as PersonalLog<ProgrammingDetails>;
-				case "Sleep":
-					return logData as PersonalLog<EmptyDetails>;
                 default:
-					throw Error("Unknown type");
+					// Anything that doesn't have extra information just create like this
+					return logData as PersonalLog<EmptyDetails>;
 			}
 		}
 	}
