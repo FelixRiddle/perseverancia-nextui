@@ -5,6 +5,7 @@
 	"scripts": {
 		"dev": "PORT=3011 next dev --turbo",
 		"build": "next build",
+		"release": "PORT=8083 next start",
 		"start": "PORT=8083 next start",
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix",
 		"test": "jest"
